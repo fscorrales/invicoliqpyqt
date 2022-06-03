@@ -33,6 +33,9 @@ MANIFEST
 invicoliqpyqt_env
 invicoliqpyqt/db
 test.py
+test.ipynb
+registro.log
+
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

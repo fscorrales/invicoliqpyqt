@@ -2,7 +2,7 @@ from PyQt5.QtSql import QSqlDatabase
 import sys
 from invicoliqpyqt.logger.logger_base import log
 
-class Conexion:
+class Conexion():
     _DATABASE = 'db/slave.sqlite'
     # _USERNAME = 'postgres'
     # _PASSWORD = 'admin'
@@ -10,6 +10,9 @@ class Conexion:
     # _HOST = '127.0.0.1'
     _con = None
     # _cursor = None
+
+    def __init__(self) -> None:
+        pass
 
     @classmethod
     def obtener_conexion(cls):

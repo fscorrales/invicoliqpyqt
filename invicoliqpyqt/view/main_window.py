@@ -2,7 +2,7 @@ import sys
 import os
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableView
+from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableView, QLineEdit
 from PyQt5.QtSql import QSqlDatabase, QSqlRelation, QSqlRelationalTableModel, QSqlTableModel
 
 
@@ -76,11 +76,8 @@ class MainWindow(QMainWindow):
         # Set up the view
         self.table_factureros.setModel(self.model)
         self.table_factureros.resizeColumnsToContents()
-        self.setCentralWidget(self.table_factureros)
+        #self.setCentralWidget(self.table_factureros)
 
-
-        # Show The App
-        self.show()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

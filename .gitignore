@@ -31,7 +31,7 @@ share/python-wheels/
 *.egg
 MANIFEST
 invicoliqpyqt_env
-invicoliqpyqt/db
+*.sqlite
 test.py
 test.ipynb
 registro.log

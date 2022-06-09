@@ -3,7 +3,8 @@ import os
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMessageBox, QTableView, QLineEdit
-from PyQt5.QtSql import QSqlDatabase, QSqlRelation, QSqlRelationalTableModel, QSqlTableModel
+from PyQt5.QtSql import QSqlTableModel
+from invicoliqpyqt.model.factureros import FacturerosModel
 
 
 # sys.path.insert(0, dirname(dirname(abspath(__file__))))
@@ -67,14 +68,15 @@ class MainWindow(QMainWindow):
         # Set up the model
         self.model = QSqlTableModel(self)
         self.model.setTable("factureros")
-        self.model.setEditStrategy(QSqlTableModel.OnFieldChange)
+        # self.model.setEditStrategy(QSqlTableModel.OnFieldChange)
         self.model.setHeaderData(0, Qt.Horizontal, "ID")
         self.model.setHeaderData(1, Qt.Horizontal, "Nombre")
         self.model.setHeaderData(2, Qt.Horizontal, "Actividad")
         self.model.setHeaderData(3, Qt.Horizontal, "Partida")
         self.model.select()
         # Set up the view
-        self.table_factureros.setModel(self.model)
+        self.factureros_model = FacturerosModel(self.model)
+        self.table_factureros.setModel(self.factureros_model)
         self.table_factureros.resizeColumnsToContents()
         #self.setCentralWidget(self.table_factureros)
 

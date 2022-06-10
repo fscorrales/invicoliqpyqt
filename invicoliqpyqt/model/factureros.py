@@ -7,7 +7,7 @@ class FacturerosModel(QAbstractTableModel):
         self._data = data
 
     def data(self, index, role):
-        value = self._model.record(index.row()).value(index.column())
+        value = self._data.record(index.row()).value(index.column())
         if role == Qt.ItemDataRole.DisplayRole:
             # if isinstance(value, int) and index.column() == 1:
             #     return "${: ,.2f}".format(value)
@@ -25,6 +25,7 @@ class FacturerosModel(QAbstractTableModel):
 
     # Create the headerData method
     def headerData(self, section: int, orientation: Qt.Orientation, role: int):
+        # section is the index of the column/row.
         if role == Qt.ItemDataRole.DisplayRole and orientation == Qt.Orientation.Horizontal:
             return self._data.headerData(section, orientation, role=role)
     

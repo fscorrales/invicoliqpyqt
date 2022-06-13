@@ -2,7 +2,7 @@ from re import I
 from PyQt5.QtCore import QAbstractTableModel, Qt, QModelIndex
 
 class FacturerosModel(QAbstractTableModel):
-    def __init__(self, *args, data=None, **kwargs):
+    def __init__(self, data, *args, **kwargs):
         super(FacturerosModel, self).__init__(*args, **kwargs)
         self._data = data
 

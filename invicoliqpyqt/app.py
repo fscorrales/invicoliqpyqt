@@ -7,5 +7,5 @@ from invicoliqpyqt.db.conexion import Conexion
 app = QApplication(sys.argv)
 with Conexion() as db:
     UIWindow = MainWindow()
-    UIWindow.show()
+    UIWindow.showMaximized()
     app.exec_()

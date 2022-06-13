@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>635</width>
-    <height>471</height>
+    <width>484</width>
+    <height>379</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Maximum" vsizetype="Maximum">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="windowTitle">
    <string>Slave</string>
@@ -16,51 +22,7 @@
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QScrollArea" name="scrollArea">
-      <property name="sizePolicy">
-       <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
-        <horstretch>0</horstretch>
-        <verstretch>0</verstretch>
-       </sizepolicy>
-      </property>
-      <property name="widgetResizable">
-       <bool>true</bool>
-      </property>
-      <widget class="QWidget" name="scrollAreaWidgetContents">
-       <property name="geometry">
-        <rect>
-         <x>0</x>
-         <y>0</y>
-         <width>615</width>
-         <height>385</height>
-        </rect>
-       </property>
-       <property name="sizePolicy">
-        <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-         <horstretch>0</horstretch>
-         <verstretch>0</verstretch>
-        </sizepolicy>
-       </property>
-       <layout class="QGridLayout" name="gridLayout_2">
-        <item row="0" column="0">
-         <widget class="QTableView" name="table_factureros"/>
-        </item>
-       </layout>
-      </widget>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QLabel" name="label">
-      <property name="lineWidth">
-       <number>2</number>
-      </property>
-      <property name="text">
-       <string>Esto es una prueba para ver cómo funcionan ciertos widgets</string>
-      </property>
-      <property name="alignment">
-       <set>Qt::AlignCenter</set>
-      </property>
-     </widget>
+     <widget class="QMdiArea" name="mdiArea"/>
     </item>
    </layout>
   </widget>
@@ -69,18 +31,36 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>635</width>
+     <width>484</width>
      <height>22</height>
     </rect>
    </property>
-   <widget class="QMenu" name="menuArchivo">
+   <widget class="QMenu" name="mnu_archivo">
     <property name="title">
      <string>Archivo</string>
     </property>
+    <widget class="QMenu" name="menuFactureros">
+     <property name="title">
+      <string>Factureros</string>
+     </property>
+     <addaction name="mnu_nuevo_facturero"/>
+     <addaction name="mnu_listado_factureros"/>
+    </widget>
+    <addaction name="menuFactureros"/>
    </widget>
-   <addaction name="menuArchivo"/>
+   <addaction name="mnu_archivo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <action name="mnu_nuevo_facturero">
+   <property name="text">
+    <string>Nuevo Facturero</string>
+   </property>
+  </action>
+  <action name="mnu_listado_factureros">
+   <property name="text">
+    <string>Listado Factureros</string>
+   </property>
+  </action>
  </widget>
  <resources/>
  <connections/>

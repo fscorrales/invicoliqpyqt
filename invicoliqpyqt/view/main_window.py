@@ -22,15 +22,15 @@ class MainWindow(QMainWindow):
         # sub.setWindowTitle("Subby Window")
         sub.setWidget(ListadoFactureros())
         sub.setAttribute(Qt.WA_DeleteOnClose)
+        sub.resize(450, 500)
+        sub.setWindowFlags(Qt.WindowCloseButtonHint | Qt.WindowMinimizeButtonHint)
 		# Add The Sub Window Into Our MDI Widget
         self.mdi.addSubWindow(sub)
 
 		# Show the new sub window
         sub.show()
-
         # Cascade them
-        self.mdi.cascadeSubWindows()
-
+        
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -7,13 +7,14 @@ from PyQt5.QtSql import QSqlTableModel
 from invicoliqpyqt.model.factureros import FacturerosModel
 
 # Inherit from QWidget
-class ListadoFactureros(QMainWindow):
+class ListadoFactureros(QWidget):
     def __init__(self, parent = None):
         super(ListadoFactureros, self).__init__(parent)
         # Load the ui file
         uic.loadUi(os.path.join(os.path.dirname(__file__), 'listado_factureros.ui'), self)
         # Define Our Widgets
         self.table_factureros = self.findChild(QTableView, 'table_factureros')
+        self.btn_add = self.findChild()
 
         # Set up the model
         self.model = QSqlTableModel(self)

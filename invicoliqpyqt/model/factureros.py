@@ -1,4 +1,3 @@
-from re import I
 from PyQt5.QtCore import QAbstractTableModel, Qt, QModelIndex
 
 class FacturerosModel(QAbstractTableModel):
@@ -31,14 +30,41 @@ class FacturerosModel(QAbstractTableModel):
     
     # Create the rowCount method
     def rowCount(self, parent: QModelIndex) -> int:
-        if self._data != None:
-            return self._data.rowCount()
-        else:
-            return 0
+        return self._data.rowCount()
     
     # Create the columnCount method
     def columnCount(self, parent: QModelIndex) -> int:
-        if self._data != None:
-            return self._data.columnCount()
-        else:
-            return 0
+        return self._data.columnCount()
+
+
+    def delete_row(self, row_int)-> bool:
+        try:
+            self._data.beginRemoveRows(QModelIndex(), self._data.rowCount(), self._data.rowCount())
+            self._data.removeRow(row_int, QModelIndex())
+            self._data.endRemoveRows()
+            self._data.select()
+            return True
+        except:
+            return False
+
+    def insertRow(self) -> bool:
+        try:
+            # Create a record
+            rec = self._data.record()
+            # Get new row values for the new record
+            # rec.setValue('Order ID', form.order_record.order_id)
+            # rec.setValue('Product', form.order_record.product_id)
+            # rec.setValue('Price', form.order_record.product_id)
+            # rec.setValue('Customer', form.order_record.customer_id)
+            # rec.setValue('Date', form.order_record.getOrderDateISO())
+            # rec.setValue('Qty', form.order_record.order_qty)
+            # rec.setValue('Order Value', form.order_record.order_value)
+
+            # Begin inserting the new row
+            # self.beginInsertRows(QModelIndex(), self._model.rowCount(), self._model.rowCount())
+            # self._model.insertRecord(self._model.rowCount(), rec)
+            # self.endInsertRows()
+            # self._model.select()
+            return True
+        except:
+            return False

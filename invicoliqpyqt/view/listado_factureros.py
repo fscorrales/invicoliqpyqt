@@ -19,19 +19,13 @@ class ListadoFactureros(QWidget):
         self.btn_del = self.findChild(QPushButton, 'btn_del')
         self.lbl_test = self.findChild(QLabel, 'lbl_test')
 
-        # Set up the model to retrieve data and past to custom model
-        self.model = QSqlTableModel(self)
-        self.model.setTable("factureros")
-        # self.model.setEditStrategy(QSqlTableModel.OnFieldChange)
-        self.model.setHeaderData(0, Qt.Horizontal, "ID")
-        self.model.setHeaderData(1, Qt.Horizontal, "Nombre")
-        self.model.setHeaderData(2, Qt.Horizontal, "Actividad")
-        self.model.setHeaderData(3, Qt.Horizontal, "Partida")
-        self.model.select()
-        # Connect view with model
-        self.factureros_model = FacturerosModel(data = self.model)
-        self.table_factureros.setModel(self.factureros_model)
+        #Initialize model
+        self.model_factureros = FacturerosModel(self)
+
+        #Connect view with model
+        self.table_factureros.setModel(self.model_factureros)
         self.table_factureros.resizeColumnsToContents()
+
         #self.setCentralWidget(self.table_factureros)
 
         #Set slot connection
@@ -45,10 +39,10 @@ class ListadoFactureros(QWidget):
             index = indexes[0]
             row = index.row()
             #Get index of first column of selected row
-            index = self.factureros_model.index(row, 0)
+            index = self.model_factureros.index(row, 0)
             #Get data of selected index
-            prueba = self.factureros_model.data(index, role=0)
-            self.factureros_model.delete_row(row)
+            prueba = self.model_factureros.data(index, role=0)
+            self.model_factureros.delete_row(row)
             self.lbl_test.setText(str(prueba))
 
     # def sortTable(self, section):

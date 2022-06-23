@@ -1,10 +1,9 @@
 import sys
 import os
 from PyQt5 import uic
-from PyQt5.QtCore import Qt
-from PyQt5.QtWidgets import QApplication, QTableView, QWidget, QPushButton, QLabel
-from PyQt5.QtSql import QSqlTableModel
+from PyQt5.QtWidgets import QApplication, QTableView, QWidget, QPushButton, QLabel, QMessageBox
 from invicoliqpyqt.model.factureros import FacturerosModel
+from invicoliqpyqt.utils.logger import log
 
 # Inherit from QWidget
 class ListadoFactureros(QWidget):
@@ -39,11 +38,15 @@ class ListadoFactureros(QWidget):
             index = indexes[0]
             row = index.row()
             #Get index of first column of selected row
-            index = self.model_factureros.index(row, 0)
+            agente_idx = self.model_factureros.index(row, 1)
             #Get data of selected index
-            prueba = self.model_factureros.data(index, role=0)
-            self.model_factureros.delete_row(row)
-            self.lbl_test.setText(str(prueba))
+            agente = self.model_factureros.data(agente_idx, role=0)
+            if QMessageBox.question(self, "Facturero - Eliminar", 
+            f"¿Desea ELIMINAR el Agente: {agente}?",
+            QMessageBox.Yes|QMessageBox.No) == QMessageBox.Yes: 
+                log.info(f'Agente {agente} eliminado')
+                self.lbl_test.setText(f'Agente {agente} eliminado')
+                return self.model_factureros.delete_row(row)
 
     # def sortTable(self, section):
     #     if section in (ships.OWNER, ships.COUNTRY):

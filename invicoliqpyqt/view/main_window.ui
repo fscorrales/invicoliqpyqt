@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>484</width>
-     <height>22</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnu_archivo">
@@ -43,7 +43,7 @@
      <property name="title">
       <string>Factureros</string>
      </property>
-     <addaction name="mnu_nuevo_facturero"/>
+     <addaction name="mnu_add_facturero"/>
      <addaction name="mnu_listado_factureros"/>
     </widget>
     <addaction name="menuFactureros"/>
@@ -51,7 +51,7 @@
    <addaction name="mnu_archivo"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
-  <action name="mnu_nuevo_facturero">
+  <action name="mnu_add_facturero">
    <property name="text">
     <string>Nuevo Facturero</string>
    </property>

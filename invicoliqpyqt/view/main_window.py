@@ -25,7 +25,7 @@ class MainWindow(QMainWindow):
         # sub.setWindowTitle("Subby Window")
         sub.setWidget(AddFacturero())
         sub.setAttribute(Qt.WA_DeleteOnClose)
-        sub.resize(500, 300)
+        sub.resize(500, 350)
         sub.setWindowFlags(Qt.CustomizeWindowHint | 
         Qt.WindowCloseButtonHint | 
         Qt.WindowMinimizeButtonHint)

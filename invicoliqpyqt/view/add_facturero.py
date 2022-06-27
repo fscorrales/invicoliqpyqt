@@ -17,6 +17,7 @@ class AddFacturero(QDialog):
         # self.btn_edit = self.findChild(QPushButton, 'btn_edit')
         # self.btn_del = self.findChild(QPushButton, 'btn_del')
         self.lbl_img = self.findChild(QLabel, 'lbl_img')
+        self.setFixedSize(500, 300)
 
 		# Open The Image
         parent_dir = os.path.dirname

@@ -1,10 +1,12 @@
-import sys
 import os
+import sys
+
+from invicoliqpyqt.view.add_facturero import AddFacturero
+from invicoliqpyqt.view.listado_factureros import ListadoFactureros
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMdiArea, QMdiSubWindow
-from invicoliqpyqt.view.add_facturero import AddFacturero
-from invicoliqpyqt.view.listado_factureros import ListadoFactureros
+
 
 # Inherit from QMainWindow
 class MainWindow(QMainWindow):
@@ -20,28 +22,16 @@ class MainWindow(QMainWindow):
         self.mnu_listado_factureros.triggered.connect(lambda: self.show_listado_factureros())
     
     def show_add_facturero(self):
-        sub = QMdiSubWindow()
-		# Set The Titlebar or the Sub Window
-        # sub.setWindowTitle("Subby Window")
-        sub.setWidget(AddFacturero())
-        sub.setAttribute(Qt.WA_DeleteOnClose)
-        sub.resize(500, 350)
-        sub.setWindowFlags(Qt.CustomizeWindowHint | 
-        Qt.WindowCloseButtonHint | 
-        Qt.WindowMinimizeButtonHint)
-		# Add The Sub Window Into Our MDI Widget
-        self.mdi.addSubWindow(sub)
-
-		# Show the new sub window
-        sub.show()
-        # Cascade them
+        # Open second window
+        self.window_add_facturero = AddFacturero()
+        self.window_add_facturero.show()
 
     def show_listado_factureros(self):
         sub = QMdiSubWindow()
 		# Set The Titlebar or the Sub Window
         # sub.setWindowTitle("Subby Window")
         sub.setWidget(ListadoFactureros())
-        sub.setAttribute(Qt.WA_DeleteOnClose)
+        sub.setAttribute(Qt.WA_DeleteOnClose, True)
         sub.resize(450, 500)
         sub.setWindowFlags(Qt.CustomizeWindowHint | 
         Qt.WindowCloseButtonHint | 

@@ -1,5 +1,6 @@
-from PyQt5.QtCore import QAbstractTableModel, Qt, QModelIndex
+from PyQt5.QtCore import QAbstractTableModel, QModelIndex, Qt
 from PyQt5.QtSql import QSqlTableModel
+
 
 class FacturerosModel(QAbstractTableModel):
     def __init__(self, *args, **kwargs):
@@ -12,6 +13,10 @@ class FacturerosModel(QAbstractTableModel):
         self.model.setHeaderData(2, Qt.Horizontal, "Actividad")
         self.model.setHeaderData(3, Qt.Horizontal, "Partida")
         self.model.select()
+        #Fetch whole data at once (needs to be solve)
+        while self.model.canFetchMore():
+            self.model.fetchMore()
+        self.model.rowCount()
 
     def data(self, index, role):
         value = self.model.record(index.row()).value(index.column())
@@ -49,28 +54,44 @@ class FacturerosModel(QAbstractTableModel):
             self.model.removeRow(row_int, QModelIndex())
             self.model.endRemoveRows()
             self.model.select()
+            #Fetch whole data at once (needs to be solve)
+            while self.model.canFetchMore():
+                self.model.fetchMore()
+            self.rowCount()
+            return True
+        except:
+            return False
+    
+    def update_row(self, row_int)-> bool:
+        try:
+            # self.model.beginRemoveRows(QModelIndex(), self.model.rowCount(), self.model.rowCount())
+            # self.model.removeRow(row_int, QModelIndex())
+            # self.model.endRemoveRows()
+            # self.model.select()
             return True
         except:
             return False
 
-    def insertRow(self) -> bool:
+    def insert_row(self, registro) -> bool:
         try:
             # Create a record
             rec = self.model.record()
             # Get new row values for the new record
-            # rec.setValue('Order ID', form.order_record.order_id)
-            # rec.setValue('Product', form.order_record.product_id)
-            # rec.setValue('Price', form.order_record.product_id)
-            # rec.setValue('Customer', form.order_record.customer_id)
-            # rec.setValue('Date', form.order_record.getOrderDateISO())
-            # rec.setValue('Qty', form.order_record.order_qty)
-            # rec.setValue('Order Value', form.order_record.order_value)
+            rec.setGenerated('id', False)
+            rec.setValue('nombre_completo', registro['nombre'])
+            rec.setValue('actividad', registro['estructura'])
+            rec.setValue('partida', registro['partida'])
 
             # Begin inserting the new row
-            # self.beginInsertRows(QModelIndex(), self._model.rowCount(), self._model.rowCount())
-            # self._model.insertRecord(self._model.rowCount(), rec)
-            # self.endInsertRows()
-            # self._model.select()
+            self.model.beginInsertRows(QModelIndex(), self.model.rowCount(), self.model.rowCount())
+            test = self.model.insertRecord(self.model.rowCount(), rec)
+            print(f'¿Se pudo insertar el registro? = {test}')
+            self.model.endInsertRows()
+            self.model.select()
+            #Fetch whole data at once (needs to be solve)
+            while self.model.canFetchMore():
+                self.model.fetchMore()
+            self.rowCount()
             return True
         except:
             return False

@@ -15,7 +15,7 @@ class Facturero():
     partida: str = ''
 
 class FormFacturero(QDialog):
-    def __init__(self, model, parent = None):
+    def __init__(self, model, row_edit = None, parent = None):
         super(FormFacturero, self).__init__(parent)
         
         # Set up UI
@@ -24,6 +24,7 @@ class FormFacturero(QDialog):
 
         # Set up model
         self.model_facturero = model
+        self.row_edit = row_edit
 
 		# Open The Image
         parent_dir = os.path.dirname
@@ -56,9 +57,13 @@ class FormFacturero(QDialog):
             rec.setValue('nombre_completo', registro.nombre)
             rec.setValue('actividad', registro.estructura)
             rec.setValue('partida', registro.partida)
-            test = self.model_facturero.insertRecord(self.model_facturero.rowCount(), rec)
+            if not self.row_edit:
+                test = self.model_facturero.insertRecord(self.model_facturero.rowCount(), rec)
+            else:
+                test = self.model_facturero.updateRowInTable(self.row_edit, rec)
             print(f'¿Se pudo insertar el registro? = {test}')
-            self.model_facturero.layoutChanged.emit()
+            #self.model_facturero.layoutChanged.emit()
+            #self.model_facturero.dataChanged.emit()
             return True
         except:
             return False

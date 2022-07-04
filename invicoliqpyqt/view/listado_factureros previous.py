@@ -1,7 +1,7 @@
 import os
 import sys
 
-from invicoliqpyqt.model.factureros import FacturerosModel
+from invicoliqpyqt.model.factureros_old import FacturerosModel
 from invicoliqpyqt.utils.logger import log
 from invicoliqpyqt.view.add_facturero import AddFacturero
 from PyQt5 import uic

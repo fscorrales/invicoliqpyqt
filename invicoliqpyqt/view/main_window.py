@@ -1,11 +1,13 @@
 import os
 import sys
 
-from invicoliqpyqt.view.add_facturero import AddFacturero
-from invicoliqpyqt.view.listado_factureros import ListadoFactureros
+from invicoliqpyqt.view.form_facturero_app import FormFacturero
+from invicoliqpyqt.view.table_factureros_app import TableFactureros
 from PyQt5 import uic
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMdiArea, QMdiSubWindow
+
+from invicoliqpyqt.view.table_factureros_app import TableFactureros
 
 
 # Inherit from QMainWindow
@@ -23,14 +25,14 @@ class MainWindow(QMainWindow):
     
     def show_add_facturero(self):
         # Open second window
-        self.window_add_facturero = AddFacturero()
+        self.window_add_facturero = FormFacturero()
         self.window_add_facturero.show()
 
     def show_listado_factureros(self):
         sub = QMdiSubWindow()
 		# Set The Titlebar or the Sub Window
         # sub.setWindowTitle("Subby Window")
-        sub.setWidget(ListadoFactureros())
+        sub.setWidget(TableFactureros())
         sub.setAttribute(Qt.WA_DeleteOnClose, True)
         sub.resize(450, 500)
         sub.setWindowFlags(Qt.CustomizeWindowHint | 

@@ -1,14 +1,15 @@
-from math import factorial
 import os
 import sys
 
 from invicoliqpyqt.model.factureros import FacturerosModel
 from invicoliqpyqt.utils.logger import log
+from invicoliqpyqt.view.add_facturero import AddFacturero
 from PyQt5 import uic
 from PyQt5.QtCore import QSortFilterProxyModel, Qt
+from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtWidgets import (QApplication, QLabel, QMessageBox, QPushButton,
                              QTableView, QWidget)
-from invicoliqpyqt.view.add_facturero import AddFacturero
+
 
 # Inherit from QWidget
 class ListadoFactureros(QWidget):
@@ -24,15 +25,24 @@ class ListadoFactureros(QWidget):
         self.btn_del = self.findChild(QPushButton, 'btn_del')
         self.lbl_test = self.findChild(QLabel, 'lbl_test')
 
-        #Initialize model
-        self.model_factureros = FacturerosModel(self)
+        #Set up model
+        self.model_factureros = QSqlTableModel(self)
+        self.model_factureros.setTable("factureros")
+        self.model_factureros.setHeaderData(0, Qt.Horizontal, "ID")
+        self.model_factureros.setHeaderData(1, Qt.Horizontal, "Nombre")
+        self.model_factureros.setHeaderData(2, Qt.Horizontal, "Actividad")
+        self.model_factureros.setHeaderData(3, Qt.Horizontal, "Partida")
+        self.model_factureros.select()
 
-        #Try proxy model
-        proxyModel = QSortFilterProxyModel()
-        proxyModel.setSourceModel(self.model_factureros)
+        # #Initialize model
+        # self.model_factureros = FacturerosModel(self)
+
+        # #Try proxy model
+        # proxyModel = QSortFilterProxyModel()
+        # proxyModel.setSourceModel(self.model_factureros)
 
         #Connect view with model
-        self.table_factureros.setModel(proxyModel)
+        self.table_factureros.setModel(self.model_factureros)
         self.table_factureros.resizeColumnsToContents()
 
         # try some sorting
@@ -95,7 +105,7 @@ class ListadoFactureros(QWidget):
             QMessageBox.Yes|QMessageBox.No) == QMessageBox.Yes: 
                 log.info(f'Agente {agente} eliminado')
                 self.lbl_test.setText(f'Agente {agente} eliminado')
-                return self.model_factureros.delete_row(row)
+                return self.model_factureros.removeRow(row)
 
     # def sortTable(self, section):
     #     if section in (ships.OWNER, ships.COUNTRY):

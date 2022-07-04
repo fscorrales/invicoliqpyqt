@@ -83,11 +83,13 @@ class FacturerosModel(QAbstractTableModel):
             rec.setValue('partida', registro['partida'])
 
             # Begin inserting the new row
+            print('Llgue')
             self.model.beginInsertRows(QModelIndex(), self.model.rowCount(), self.model.rowCount())
             test = self.model.insertRecord(self.model.rowCount(), rec)
             print(f'¿Se pudo insertar el registro? = {test}')
             self.model.endInsertRows()
-            self.model.select()
+            self.model.layoutChanged.emit()
+            # self.model.select()
             #Fetch whole data at once (needs to be solve)
             while self.model.canFetchMore():
                 self.model.fetchMore()

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>listado_factureros</class>
- <widget class="QWidget" name="listado_factureros">
+ <class>table_factureros</class>
+ <widget class="QWidget" name="table_factureros">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -42,7 +42,7 @@
       </property>
       <layout class="QGridLayout" name="gridLayout_2">
        <item row="0" column="0">
-        <widget class="QTableView" name="table_factureros"/>
+        <widget class="QTableView" name="table"/>
        </item>
        <item row="2" column="0">
         <widget class="QFrame" name="frame">

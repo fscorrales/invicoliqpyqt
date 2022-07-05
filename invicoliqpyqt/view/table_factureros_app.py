@@ -5,7 +5,8 @@ from invicoliqpyqt.view.form_facturero_app import FormFacturero
 from invicoliqpyqt.view.table_factureros import Ui_table_factureros
 from PyQt5.QtCore import Qt
 from PyQt5.QtSql import QSqlTableModel
-from PyQt5.QtWidgets import (QApplication, QMessageBox, QWidget)
+from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QMessageBox,
+                             QWidget)
 
 
 # Inherit from QWidget
@@ -31,6 +32,7 @@ class TableFactureros(QWidget):
         self.ui.table.setModel(self.model)
 
         #Set up table properties
+        self.ui.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
         self.ui.table.verticalHeader().setVisible(False)
         self.ui.table.hideColumn(0)
         self.ui.table.resizeColumnsToContents()

@@ -4,8 +4,9 @@ from dataclasses import dataclass
 
 from invicoliqpyqt.utils.logger import log
 from invicoliqpyqt.view.form_facturero import Ui_form_facturero
+from PyQt5.QtCore import QModelIndex
 from PyQt5.QtGui import QPixmap
-from PyQt5.QtWidgets import QApplication, QDialog, QLabel
+from PyQt5.QtWidgets import QApplication, QDialog
 
 
 @dataclass
@@ -57,13 +58,13 @@ class FormFacturero(QDialog):
             rec.setValue('nombre_completo', registro.nombre)
             rec.setValue('actividad', registro.estructura)
             rec.setValue('partida', registro.partida)
+            self.model_facturero.layoutAboutToBeChanged.emit()
             if not self.row_edit:
                 test = self.model_facturero.insertRecord(self.model_facturero.rowCount(), rec)
             else:
                 test = self.model_facturero.updateRowInTable(self.row_edit, rec)
             print(f'¿Se pudo insertar el registro? = {test}')
-            #self.model_facturero.layoutChanged.emit()
-            #self.model_facturero.dataChanged.emit()
+            self.model_facturero.layoutChanged.emit()
             return True
         except:
             return False

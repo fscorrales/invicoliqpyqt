@@ -11,7 +11,7 @@ from PyQt5.QtWidgets import QApplication, QDialog
 
 @dataclass
 class Facturero():
-    nombre: str = ''
+    razon_social: str = ''
     estructura: str = ''
     partida: str = ''
 
@@ -55,8 +55,8 @@ class FormFacturero(QDialog):
             rec = self.model_facturero.record()
             # Get new row values for the new record
             rec.setGenerated('id', False)
-            rec.setValue('nombre_completo', registro.nombre)
-            rec.setValue('actividad', registro.estructura)
+            rec.setValue('razon_social', registro.razon_social)
+            rec.setValue('estructura', registro.estructura)
             rec.setValue('partida', registro.partida)
             self.model_facturero.layoutAboutToBeChanged.emit()
             if not self.row_edit:

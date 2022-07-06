@@ -39,16 +39,30 @@
     <property name="title">
      <string>Archivo</string>
     </property>
-    <widget class="QMenu" name="menuFactureros">
+    <widget class="QMenu" name="mnu_factureros">
      <property name="title">
       <string>Factureros</string>
      </property>
      <addaction name="mnu_add_facturero"/>
-     <addaction name="mnu_listado_factureros"/>
+     <addaction name="mnu_list_factureros"/>
     </widget>
-    <addaction name="menuFactureros"/>
+    <addaction name="mnu_factureros"/>
+   </widget>
+   <widget class="QMenu" name="mnu_siif">
+    <property name="title">
+     <string>SIIF</string>
+    </property>
+    <widget class="QMenu" name="menuComprobantes">
+     <property name="title">
+      <string>Comprobantes</string>
+     </property>
+     <addaction name="mnu_add_comprobante_siif"/>
+     <addaction name="mnu_list_comprobantes_siif"/>
+    </widget>
+    <addaction name="menuComprobantes"/>
    </widget>
    <addaction name="mnu_archivo"/>
+   <addaction name="mnu_siif"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <action name="mnu_add_facturero">
@@ -56,9 +70,19 @@
     <string>Nuevo Facturero</string>
    </property>
   </action>
-  <action name="mnu_listado_factureros">
+  <action name="mnu_list_factureros">
    <property name="text">
     <string>Listado Factureros</string>
+   </property>
+  </action>
+  <action name="mnu_add_comprobante_siif">
+   <property name="text">
+    <string>Nuevo Comprobante</string>
+   </property>
+  </action>
+  <action name="mnu_list_comprobantes_siif">
+   <property name="text">
+    <string>Listado Comprobantes</string>
    </property>
   </action>
  </widget>

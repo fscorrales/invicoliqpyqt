@@ -33,7 +33,7 @@ class TableFactureros(QWidget):
 
         #Set up table properties
         self.ui.table.setEditTriggers(QAbstractItemView.NoEditTriggers)
-        self.ui.table.verticalHeader().setVisible(False)
+        # self.ui.table.verticalHeader().setVisible(False)
         self.ui.table.hideColumn(0)
         self.ui.table.resizeColumnsToContents()
         self.ui.table.setSortingEnabled(True)

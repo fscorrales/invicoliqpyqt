@@ -1,9 +1,11 @@
 import sys
 
-from invicoliqpyqt.model.factureros import ModelFactureros
+from invicoliqpyqt.model.models import (ModelFactureros,
+                                        ModelHonorariosFactureros)
 from invicoliqpyqt.view.form_facturero_app import FormFacturero
 from invicoliqpyqt.view.main_window import Ui_main_window
 from invicoliqpyqt.view.table_factureros_app import TableFactureros
+from invicoliqpyqt.view.table_siif_app import TableSIIF
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import QApplication, QMainWindow, QMdiSubWindow
 
@@ -19,10 +21,12 @@ class MainWindow(QMainWindow):
 
         #Initialize Model
         self.model_factureros = ModelFactureros(self)
+        self.model_honorarios_siif = ModelHonorariosFactureros(self)
 
         # Add Menu Triggers
-        self.ui.mnu_add_facturero.triggered.connect(lambda: self.show_add_facturero())
-        self.ui.mnu_listado_factureros.triggered.connect(lambda: self.show_listado_factureros())
+        self.ui.mnu_add_facturero.triggered.connect(self.show_add_facturero)
+        self.ui.mnu_list_factureros.triggered.connect(self.show_listado_factureros)
+        self.ui.mnu_list_comprobantes_siif.triggered.connect(self.show_listado_comprobantes_siif)
     
     def show_add_facturero(self):
         # Open second window
@@ -44,7 +48,22 @@ class MainWindow(QMainWindow):
 
 		# Show the new sub window
         sub.show()
-        # Cascade them
+
+    def show_listado_comprobantes_siif(self):
+        sub = QMdiSubWindow()
+		# Set The Titlebar or the Sub Window
+        # sub.setWindowTitle("Subby Window")
+        sub.setWidget(TableSIIF(self.model_honorarios_siif.model))
+        sub.setAttribute(Qt.WA_DeleteOnClose, True)
+        sub.resize(800, 550)
+        sub.setWindowFlags(Qt.CustomizeWindowHint | 
+        Qt.WindowCloseButtonHint | 
+        Qt.WindowMinimizeButtonHint)
+		# Add The Sub Window Into Our MDI Widget
+        self.ui.mdi_area.addSubWindow(sub)
+
+		# Show the new sub window
+        sub.show()
         
 
 if __name__ == "__main__":

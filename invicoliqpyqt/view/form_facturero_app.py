@@ -64,7 +64,7 @@ class FormFacturero(QDialog):
             else:
                 test = self.model_facturero.updateRowInTable(self.row_edit, rec)
             print(f'¿Se pudo insertar el registro? = {test}')
-            self.model_facturero.layoutChanged.emit()
+            self.model_facturero.select()
             return True
         except:
             return False

@@ -95,7 +95,7 @@ class TableFactureros(QWidget):
             QMessageBox.Yes|QMessageBox.No) == QMessageBox.Yes: 
                 log.info(f'Agente {agente} eliminado')
                 self.ui.lbl_test.setText(f'Agente {agente} eliminado')
-                return self.model.removeRow(row), self.ui.table.hideRow(row)
+                return self.model.removeRow(row), self.model.select()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

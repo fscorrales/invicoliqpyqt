@@ -79,19 +79,18 @@ class TableFactureros(QWidget):
         indexes = self.ui.table.selectedIndexes()
         if indexes:
             #Retrive the index row
-            index = indexes[0]
+            index = self._proxy.mapToSource(indexes[0])
             row = index.row()
             #Get index of each column of selected row
-            facturero_id = self._proxy.index(row, 0)
-            facturero_nombre = self._proxy.index(row, 1)
-            facturero_estructura = self._proxy.index(row, 2)
-            facturero_partida = self._proxy.index(row, 3)
+            facturero_id = self.model.index(row, 0)
+            facturero_nombre = self.model.index(row, 1)
+            facturero_estructura = self.model.index(row, 2)
+            facturero_partida = self.model.index(row, 3)
             #Get data of selected row
-            facturero_id = self._proxy.data(facturero_id, role=0)
-            facturero_nombre = self._proxy.data(facturero_nombre, role=0)
-            facturero_estructura = self._proxy.data(facturero_estructura, role=0)
-            facturero_partida = self._proxy.data(facturero_partida, role=0)
-            
+            facturero_id = self.model.data(facturero_id, role=0)
+            facturero_nombre = self.model.data(facturero_nombre, role=0)
+            facturero_estructura = self.model.data(facturero_estructura, role=0)
+            facturero_partida = self.model.data(facturero_partida, role=0)
             # Open second window in edit mode
             self.window_add_facturero = FormFacturero(self.model, row)
             self.window_add_facturero.ui.txt_nombre.setText(facturero_nombre)

@@ -1,6 +1,6 @@
 import sys
 
-from invicoliqpyqt.model.models import (ModelFactureros,
+from invicoliqpyqt.model.models import (ModelComprobantesSIIF, ModelFactureros,
                                         ModelHonorariosFactureros)
 from invicoliqpyqt.view.form_facturero_app import FormFacturero
 from invicoliqpyqt.view.main_window import Ui_main_window
@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
 
         #Initialize Model
         self.model_factureros = ModelFactureros(self)
-        self.model_honorarios_siif = ModelHonorariosFactureros(self)
+        self.model_honorarios_siif = ModelComprobantesSIIF(self)
 
         # Add Menu Triggers
         self.ui.mnu_add_facturero.triggered.connect(self.show_add_facturero)

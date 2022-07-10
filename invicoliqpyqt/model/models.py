@@ -45,3 +45,15 @@ class ModelComprobantesSIIF(QSqlQueryModel):
         self.model = QSqlQueryModel()
         
         self.model.setQuery(query)
+
+class ModelImputacionesSIIF(QSqlQueryModel):
+    def __init__(self,*args, **kwargs):
+        super(ModelImputacionesSIIF, self).__init__(*args, **kwargs)
+        query = ('SELECT nro_entrada, estructura, partida, ' + 
+                'sum(importe_bruto) as ejecutado ' + 
+                'FROM honorarios_factureros ' + 
+                'GROUP BY nro_entrada')
+        
+        self.model = QSqlQueryModel()
+        
+        self.model.setQuery(query)

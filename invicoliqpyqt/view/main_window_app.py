@@ -21,7 +21,7 @@ class MainWindow(QMainWindow):
 
         #Initialize Model
         self.model_factureros = ModelFactureros(self)
-        self.model_honorarios_siif = ModelComprobantesSIIF(self)
+        self.model_comprobantes_siif = ModelComprobantesSIIF(self)
 
         # Add Menu Triggers
         self.ui.mnu_add_facturero.triggered.connect(self.show_add_facturero)
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         sub = QMdiSubWindow()
 		# Set The Titlebar or the Sub Window
         # sub.setWindowTitle("Subby Window")
-        sub.setWidget(TableSIIF(self.model_honorarios_siif.model))
+        sub.setWidget(TableSIIF(self.model_comprobantes_siif.model))
         sub.setAttribute(Qt.WA_DeleteOnClose, True)
         sub.resize(800, 550)
         sub.setWindowFlags(Qt.CustomizeWindowHint | 

@@ -31,6 +31,8 @@ class ModelHonorariosFactureros(QSqlTableModel):
         self.model.setHeaderData(11, Qt.Horizontal, "Estructura")
         self.model.setHeaderData(12, Qt.Horizontal, "Partida")
         self.model.select()
+        while self.model.canFetchMore():
+            self.model.fetchMore()
 
 class ModelComprobantesSIIF(QSqlQueryModel):
     def __init__(self, *args, **kwargs):

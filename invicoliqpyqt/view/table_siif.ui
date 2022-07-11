@@ -14,52 +14,76 @@
    <string>Comprobantes SIIF</string>
   </property>
   <layout class="QGridLayout" name="gridLayout">
-   <item row="1" column="0">
-    <widget class="QGroupBox" name="groupBox_2">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
+   <item row="0" column="0">
+    <widget class="QTabWidget" name="tab_siif">
+     <property name="currentIndex">
+      <number>0</number>
      </property>
-     <property name="title">
-      <string>GroupBox</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_3">
-      <item row="0" column="0">
-       <widget class="QTableView" name="table_imputaciones"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="0" column="0" colspan="2">
-    <widget class="QGroupBox" name="groupBox">
-     <property name="sizePolicy">
-      <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
-       <horstretch>0</horstretch>
-       <verstretch>0</verstretch>
-      </sizepolicy>
-     </property>
-     <property name="title">
-      <string>GroupBox</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_2">
-      <item row="0" column="0">
-       <widget class="QTableView" name="table_comprobantes"/>
-      </item>
-     </layout>
-    </widget>
-   </item>
-   <item row="1" column="1">
-    <widget class="QGroupBox" name="groupBox_3">
-     <property name="title">
-      <string>GroupBox</string>
-     </property>
-     <layout class="QGridLayout" name="gridLayout_4">
-      <item row="0" column="0">
-       <widget class="QTableWidget" name="table_retenciones"/>
-      </item>
-     </layout>
+     <widget class="QWidget" name="tab_comprobantes_siif">
+      <attribute name="title">
+       <string>Resumen</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_5">
+       <item row="2" column="0">
+        <widget class="QGroupBox" name="groupBox_2">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Imputación</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_3">
+          <item row="0" column="0">
+           <widget class="QTableWidget" name="table_imputaciones"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="2" column="1">
+        <widget class="QGroupBox" name="groupBox_3">
+         <property name="title">
+          <string>Retenciones</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_4">
+          <item row="0" column="0">
+           <widget class="QTableWidget" name="table_retenciones"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+       <item row="1" column="0" colspan="2">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="sizePolicy">
+          <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+           <horstretch>0</horstretch>
+           <verstretch>0</verstretch>
+          </sizepolicy>
+         </property>
+         <property name="title">
+          <string>Comprobantes SIIF</string>
+         </property>
+         <layout class="QGridLayout" name="gridLayout_2">
+          <item row="0" column="0">
+           <widget class="QTableView" name="table_comprobantes"/>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+     </widget>
+     <widget class="QWidget" name="tab_honorarios">
+      <attribute name="title">
+       <string>Detalle</string>
+      </attribute>
+      <layout class="QGridLayout" name="gridLayout_6">
+       <item row="0" column="0">
+        <widget class="QTableView" name="table_honorarios"/>
+       </item>
+      </layout>
+     </widget>
     </widget>
    </item>
   </layout>

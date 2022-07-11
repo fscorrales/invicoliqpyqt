@@ -4,10 +4,10 @@ from invicoliqpyqt.utils.logger import log
 from invicoliqpyqt.view.form_facturero_app import FormFacturero
 from invicoliqpyqt.view.table_factureros import Ui_table_factureros
 from invicoliqpyqt.utils.editable_headers import EditableHeaderView
-from PyQt5.QtCore import Qt, pyqtSlot, QSortFilterProxyModel
+from PyQt5 import QtCore
 from PyQt5.QtSql import QSqlTableModel
 from PyQt5.QtWidgets import (QAbstractItemView, QApplication, QMessageBox,
-                             QWidget)
+                             QWidget, QMenu, QAction)
 
 
 # Inherit from QWidget
@@ -30,11 +30,11 @@ class TableFactureros(QWidget):
         # self.model.select()
 
         # Initialize editable headers
-        headerview = EditableHeaderView(self.ui.table)
-        self.ui.table.setHorizontalHeader(headerview)
+        # headerview = EditableHeaderView(self.ui.table)
+        # self.ui.table.setHorizontalHeader(headerview)
 
         #Initialize proxy model
-        self._proxy = QSortFilterProxyModel(self)
+        self._proxy = QtCore.QSortFilterProxyModel(self)
         self._proxy.setSourceModel(self.model)
 
         #Connect view with model
@@ -46,7 +46,7 @@ class TableFactureros(QWidget):
         self.ui.table.hideColumn(0)
         self.ui.table.resizeColumnsToContents()
         self.ui.table.setSortingEnabled(True)
-        self.ui.table.sortByColumn(1, Qt.AscendingOrder)
+        self.ui.table.sortByColumn(1, QtCore.Qt.AscendingOrder)
 
         # allow drag to rearrange columns
         # self.table_factureros.horizontalHeader().setMovable(True)
@@ -54,20 +54,22 @@ class TableFactureros(QWidget):
         #self.setCentralWidget(self.table_factureros)
 
         #Set editable (filter) headers
-        headerview.setEditable(1, True)
-        headerview.setEditable(2, True)
-        headerview.setEditable(3, True)
+        # headerview.setEditable(1, True)
+        # headerview.setEditable(2, True)
+        # headerview.setEditable(3, True)
 
         #Set slot connection
-        headerview.textChanged.connect(self.on_text_changed)
+        # headerview.textChanged.connect(self.on_text_changed)
         self.ui.btn_add.clicked.connect(self.add_facturero)
         self.ui.btn_edit.clicked.connect(self.edit_facturero)
         self.ui.btn_del.clicked.connect(self.del_facturero)
+        self.horizontalHeader = self.ui.table.horizontalHeader()
+        self.horizontalHeader.sectionClicked.connect(self.on_view_horizontalHeader_sectionClicked)
 
-    @pyqtSlot(int, str)
-    def on_text_changed(self, col, text):
-        self._proxy.setFilterKeyColumn(col)
-        self._proxy.setFilterWildcard("*{}*".format(text.upper()) if text else "")
+    # @QtCore.pyqtSlot(int, str)
+    # def on_text_changed(self, col, text):
+    #     self._proxy.setFilterKeyColumn(col)
+    #     self._proxy.setFilterWildcard("*{}*".format(text.upper()) if text else "")
 
     def add_facturero(self):
         # Open second window
@@ -115,6 +117,78 @@ class TableFactureros(QWidget):
                 log.info(f'Agente {agente} eliminado')
                 self.ui.lbl_test.setText(f'Agente {agente} eliminado')
                 return self._proxy.removeRow(row), self.model.select()
+
+    @QtCore.pyqtSlot(int)
+    def on_view_horizontalHeader_sectionClicked(self, logicalIndex):
+
+        self.logicalIndex   = logicalIndex
+        self.menuValues     = QMenu(self)
+        self.signalMapper   = QtCore.QSignalMapper(self)
+        # self.comboBox.blockSignals(True)
+        # self.comboBox.setCurrentIndex(self.logicalIndex)
+        # self.comboBox.blockSignals(True)
+
+        if self.logicalIndex != 1:
+            # valuesUnique = self.model._df.iloc[:, self.logicalIndex].unique()
+            data = []
+            for row in range(self.model.rowCount()):
+                index = self.model.index(row, self.logicalIndex)
+                # We suppose data are strings
+                data.append(str(self.model.data(index)))
+
+            valuesUnique = list(set(data))
+
+            actionAll = QAction("All", self)
+            actionAll.triggered.connect(self.on_actionAll_triggered)
+            self.menuValues.addAction(actionAll)
+            self.menuValues.addSeparator()
+            for actionNumber, actionName in enumerate(sorted(list(set(valuesUnique)))):
+                action = QAction(actionName, self)
+                self.signalMapper.setMapping(action, actionNumber)
+                action.triggered.connect(self.signalMapper.map)
+                self.menuValues.addAction(action)
+            self.signalMapper.mapped.connect(self.on_signalMapper_mapped)
+            headerPos = self.ui.table.mapToGlobal(self.horizontalHeader.pos())
+            posY = headerPos.y() + self.horizontalHeader.height()
+            posX = headerPos.x() + self.horizontalHeader.sectionPosition(self.logicalIndex)
+
+            self.menuValues.exec_(QtCore.QPoint(posX, posY))
+
+    @QtCore.pyqtSlot()
+    def on_actionAll_triggered(self):
+        filterColumn = self.logicalIndex
+        filterString = QtCore.QRegExp(  "",
+                                        QtCore.Qt.CaseInsensitive,
+                                        QtCore.QRegExp.RegExp
+                                        )
+
+        self._proxy.setFilterRegExp(filterString)
+        self._proxy.setFilterKeyColumn(filterColumn)
+
+    @QtCore.pyqtSlot(int)
+    def on_signalMapper_mapped(self, i):
+        stringAction = self.signalMapper.mapping(i).text()
+        filterColumn = self.logicalIndex
+        filterString = QtCore.QRegExp(  stringAction,
+                                        QtCore.Qt.CaseSensitive,
+                                        QtCore.QRegExp.FixedString
+                                        )
+
+        self._proxy.setFilterRegExp(filterString)
+        self._proxy.setFilterKeyColumn(filterColumn)
+
+    @QtCore.pyqtSlot(str)
+    def on_lineEdit_textChanged(self, text):
+        search = QtCore.QRegExp(    text,
+                                    QtCore.Qt.CaseInsensitive,
+                                    QtCore.QRegExp.RegExp
+                                    )
+
+        self._proxy.setFilterRegExp(search)
+
+    @QtCore.pyqtSlot(int)
+    def on_comboBox_currentIndexChanged(self, index):
+        self._proxy.setFilterKeyColumn(index)
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

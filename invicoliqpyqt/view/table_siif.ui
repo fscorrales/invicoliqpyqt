@@ -57,7 +57,7 @@
      </property>
      <layout class="QGridLayout" name="gridLayout_4">
       <item row="0" column="0">
-       <widget class="QTableView" name="table_retenciones"/>
+       <widget class="QTableWidget" name="table_retenciones"/>
       </item>
      </layout>
     </widget>

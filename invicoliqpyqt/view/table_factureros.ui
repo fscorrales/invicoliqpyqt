@@ -51,7 +51,7 @@
        </widget>
       </item>
       <item row="2" column="4" colspan="2">
-       <widget class="QPushButton" name="btn_del">
+       <widget class="QPushButton" name="btn_delete">
         <property name="text">
          <string>Borrar</string>
         </property>

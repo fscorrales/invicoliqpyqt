@@ -63,7 +63,7 @@ class TableFactureros(QWidget):
         headerview.textChanged.connect(self.on_text_changed)
         self.ui.btn_add.clicked.connect(self.add_facturero)
         self.ui.btn_edit.clicked.connect(self.edit_facturero)
-        self.ui.btn_del.clicked.connect(self.del_facturero)
+        self.ui.btn_delete.clicked.connect(self.delete_facturero)
         self.horizontalHeader = self.ui.table.horizontalHeader()
         self.horizontalHeader.sectionClicked.connect(self.on_view_horizontalHeader_sectionClicked)
 
@@ -102,7 +102,7 @@ class TableFactureros(QWidget):
             self.window_add_facturero.ui.txt_partida.setText(facturero_partida)
             self.window_add_facturero.show()
 
-    def del_facturero(self):
+    def delete_facturero(self):
         #Get index of the selected items
         indexes = self.ui.table.selectedIndexes()
         if indexes:

@@ -30,8 +30,8 @@ class TableFactureros(QWidget):
         # self.model.select()
 
         # Initialize editable headers
-        # headerview = EditableHeaderView(self.ui.table)
-        # self.ui.table.setHorizontalHeader(headerview)
+        headerview = EditableHeaderView(self.ui.table)
+        self.ui.table.setHorizontalHeader(headerview)
 
         #Initialize proxy model
         self._proxy = QtCore.QSortFilterProxyModel(self)
@@ -54,22 +54,22 @@ class TableFactureros(QWidget):
         #self.setCentralWidget(self.table_factureros)
 
         #Set editable (filter) headers
-        # headerview.setEditable(1, True)
+        headerview.setEditable(1, True)
         # headerview.setEditable(2, True)
         # headerview.setEditable(3, True)
 
         #Set slot connection
-        # headerview.textChanged.connect(self.on_text_changed)
+        headerview.textChanged.connect(self.on_text_changed)
         self.ui.btn_add.clicked.connect(self.add_facturero)
         self.ui.btn_edit.clicked.connect(self.edit_facturero)
         self.ui.btn_del.clicked.connect(self.del_facturero)
         self.horizontalHeader = self.ui.table.horizontalHeader()
         self.horizontalHeader.sectionClicked.connect(self.on_view_horizontalHeader_sectionClicked)
 
-    # @QtCore.pyqtSlot(int, str)
-    # def on_text_changed(self, col, text):
-    #     self._proxy.setFilterKeyColumn(col)
-    #     self._proxy.setFilterWildcard("*{}*".format(text.upper()) if text else "")
+    @QtCore.pyqtSlot(int, str)
+    def on_text_changed(self, col, text):
+        self._proxy.setFilterKeyColumn(col)
+        self._proxy.setFilterWildcard("*{}*".format(text.upper()) if text else "")
 
     def add_facturero(self):
         # Open second window

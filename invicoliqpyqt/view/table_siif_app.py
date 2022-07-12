@@ -46,7 +46,10 @@ class TableSIIF(QWidget):
         self.ui.table_comprobantes.selectionModel().selectionChanged.connect(self.show_detail)
 
         #Select first row
+        self.ui.tab_siif.setCurrentIndex(0)
         self.ui.table_comprobantes.selectRow(0)
+
+
 
     def show_detail(self):
         indexes = self.ui.table_comprobantes.selectedIndexes()

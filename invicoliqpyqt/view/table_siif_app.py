@@ -1,9 +1,9 @@
 import sys
 
 from invicoliqpyqt.model.models import ModelHonorariosFactureros
-from invicoliqpyqt.utils.delegates import FloatDelegate
+from invicoliqpyqt.utils.delegates import FloatDelegate, MultipleDelegate
 from invicoliqpyqt.view.table_siif import Ui_table_siif
-from PyQt5.QtCore import QSortFilterProxyModel
+from PyQt5.QtCore import QSortFilterProxyModel, Qt
 from PyQt5.QtSql import QSqlQuery
 from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QWidget
 
@@ -19,23 +19,24 @@ class TableSIIF(QWidget):
 
         #Set up model
         self.model_comprobantes_siif = model
-        # self.proxy_comprobantes_siif = QSortFilterProxyModel(self)
-        # self.proxy_comprobantes_siif.setSourceModel(self.model_comprobantes_siif)
+        self.proxy_comprobantes_siif = QSortFilterProxyModel(self)
+        self.proxy_comprobantes_siif.setSourceModel(self.model_comprobantes_siif)
         self.model_honorarios = ModelHonorariosFactureros(self).model
         self.proxy_honorarios = QSortFilterProxyModel(self)
         self.proxy_honorarios.setSourceModel(self.model_honorarios)
 
         #Connect view with model
-        self.ui.table_comprobantes.setModel(self.model_comprobantes_siif)
+        self.ui.table_comprobantes.setModel(self.proxy_comprobantes_siif)
         self.ui.table_honorarios.setModel(self.proxy_honorarios)
 
         #Set table properties
-        self.ui.table_comprobantes.setItemDelegateForColumn(3, FloatDelegate())
+        self.ui.table_comprobantes.setItemDelegate(MultipleDelegate([3], [1]))
         self.ui.table_comprobantes.resizeColumnsToContents()
         self.ui.table_comprobantes.setSortingEnabled(True)
+        self.ui.table_comprobantes.sortByColumn(1, Qt.DescendingOrder)
         self.ui.table_honorarios.hideColumn(0)
         self.ui.table_honorarios.hideColumn(1)
-        self.ui.table_honorarios.setItemDelegate(FloatDelegate())
+        self.ui.table_honorarios.setItemDelegate(MultipleDelegate(range(3,11)))
         self.ui.table_honorarios.verticalHeader().setVisible(False)
         # self.ui.table_honorarios.setItemDelegateForColumn(4, FloatDelegate())
         self.ui.table_honorarios.setSortingEnabled(True)
@@ -44,14 +45,17 @@ class TableSIIF(QWidget):
         #Set slot connection
         self.ui.table_comprobantes.selectionModel().selectionChanged.connect(self.show_detail)
 
+        #Prueba
+        self.ui.table_comprobantes.selectRow(0)
+
     def show_detail(self):
         indexes = self.ui.table_comprobantes.selectedIndexes()
         if indexes:
             #Get N° Entrada SIIF
             index = indexes[0]
             row = index.row()
-            cyo_id = self.model_comprobantes_siif.index(row, 0)
-            cyo_id = self.model_comprobantes_siif.data(cyo_id, role=0)
+            cyo_id = self.proxy_comprobantes_siif.index(row, 0)
+            cyo_id = self.proxy_comprobantes_siif.data(cyo_id, role=0)
             
             #Update table imputaciones
             self.ui.table_imputaciones.setRowCount(0)

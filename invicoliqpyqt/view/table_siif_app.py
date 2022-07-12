@@ -45,7 +45,7 @@ class TableSIIF(QWidget):
         #Set slot connection
         self.ui.table_comprobantes.selectionModel().selectionChanged.connect(self.show_detail)
 
-        #Prueba
+        #Select first row
         self.ui.table_comprobantes.selectRow(0)
 
     def show_detail(self):

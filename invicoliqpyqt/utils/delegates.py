@@ -4,11 +4,30 @@ from PyQt5.QtWidgets import QItemDelegate, QStyle, QStyledItemDelegate
 
 
 class FloatDelegate(QItemDelegate):
-    def __init__(self, decimals=None, parent=None):
+    def __init__(self, highlight_color = None, parent=None):
         QItemDelegate.__init__(self, parent=parent)
-        # self.nDecimals = decimals
+        if highlight_color == None:
+            self.highlight_color = '#308cc6'
+        else:
+            self.highlight_color = highlight_color
 
     def paint(self, painter, option, index):
+        painter.save()
+
+        #background color
+        painter.setPen(QPen(Qt.NoPen))
+        if option.state & QStyle.State_Selected:
+            painter.setBrush(QColor(self.highlight_color))
+        else:
+            painter.setBrush(QBrush(Qt.white))
+        painter.drawRect(option.rect)
+
+        #text color when selected and not
+        if option.state & QStyle.State_Selected:
+            painter.setPen(QPen(Qt.white))
+        else:
+            painter.setPen(QPen(Qt.black))
+
         value = index.model().data(index, Qt.EditRole)
         try:
             number = float(value)
@@ -17,35 +36,43 @@ class FloatDelegate(QItemDelegate):
         except :
             QItemDelegate.paint(self, painter, option, index)
 
+        painter.restore()
+
 class MultipleDelegate(QItemDelegate):
-    def __init__(self, float_cols=[], str_cols=[], parent=None):
+    def __init__(self, float_cols=[], str_cols=[], 
+    highlight_color = None ,parent=None):
         QItemDelegate.__init__(self, parent=parent)
         self.float_cols = float_cols
         self.str_cols = str_cols
+        if highlight_color == None:
+            self.highlight_color = '#308cc6'
+        else:
+            self.highlight_color = highlight_color
 
     def paint(self, painter, option, index):
         painter.save()
 
+        #background color
         painter.setPen(QPen(Qt.NoPen))
         if option.state & QStyle.State_Selected:
-            painter.setBrush(QColor('#308cc6'))
+            painter.setBrush(QColor(self.highlight_color))
         else:
             painter.setBrush(QBrush(Qt.white))
         painter.drawRect(option.rect)
 
-        
+        #text color when selected and not
         if option.state & QStyle.State_Selected:
             painter.setPen(QPen(Qt.white))
         else:
             painter.setPen(QPen(Qt.black))
 
+        #Custom format on selected columns
         if index.column() in self.float_cols:
             value = index.model().data(index, Qt.EditRole)
             try:
                 number = float(value)
                 painter.drawText(option.rect, Qt.AlignRight|Qt.AlignVCenter, 
                                 "{:,.2f}".format(number))
-                
             except:
                 QItemDelegate.paint(self, painter, option, index)
         elif index.column() in self.str_cols:

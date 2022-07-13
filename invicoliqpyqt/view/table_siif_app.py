@@ -5,7 +5,7 @@ from invicoliqpyqt.utils.delegates import FloatDelegate, MultipleDelegate
 from invicoliqpyqt.view.table_siif import Ui_table_siif
 from PyQt5.QtCore import QSortFilterProxyModel, Qt
 from PyQt5.QtSql import QSqlQuery
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QWidget
+from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QWidget, QMessageBox
 
 
 # Inherit from QMainWindow
@@ -29,14 +29,18 @@ class TableSIIF(QWidget):
         self.ui.table_comprobantes.setModel(self.proxy_comprobantes_siif)
         self.ui.table_honorarios.setModel(self.proxy_honorarios)
 
+        #Get default highlight color
+        self.highlight_color = self.ui.table_comprobantes.palette().highlight().color().name()
+
         #Set table properties
-        self.ui.table_comprobantes.setItemDelegate(MultipleDelegate([3], [1]))
+        self.ui.table_comprobantes.hideColumn(0)
+        self.ui.table_comprobantes.setItemDelegate(MultipleDelegate([5], [3], highlight_color=self.highlight_color))
         self.ui.table_comprobantes.resizeColumnsToContents()
         self.ui.table_comprobantes.setSortingEnabled(True)
-        self.ui.table_comprobantes.sortByColumn(1, Qt.DescendingOrder)
+        self.ui.table_comprobantes.sortByColumn(3, Qt.DescendingOrder)
         self.ui.table_honorarios.hideColumn(0)
         self.ui.table_honorarios.hideColumn(1)
-        self.ui.table_honorarios.setItemDelegate(MultipleDelegate(range(3,11)))
+        self.ui.table_honorarios.setItemDelegate(MultipleDelegate(range(3,11), highlight_color=self.highlight_color))
         self.ui.table_honorarios.verticalHeader().setVisible(False)
         # self.ui.table_honorarios.setItemDelegateForColumn(4, FloatDelegate())
         self.ui.table_honorarios.setSortingEnabled(True)
@@ -44,12 +48,11 @@ class TableSIIF(QWidget):
 
         #Set slot connection
         self.ui.table_comprobantes.selectionModel().selectionChanged.connect(self.show_detail)
+        self.ui.btn_delete.clicked.connect(self.delete_comprobante_siif)
 
         #Select first row
         self.ui.tab_siif.setCurrentIndex(0)
         self.ui.table_comprobantes.selectRow(0)
-
-
 
     def show_detail(self):
         indexes = self.ui.table_comprobantes.selectedIndexes()
@@ -75,7 +78,7 @@ class TableSIIF(QWidget):
                 self.ui.table_imputaciones.setItem(rows, 0, QTableWidgetItem(query.value(0)))
                 self.ui.table_imputaciones.setItem(rows, 1, QTableWidgetItem(query.value(1)))
                 self.ui.table_imputaciones.setItem(rows, 2, QTableWidgetItem(str(query.value(2))))
-            self.ui.table_imputaciones.setItemDelegateForColumn(2, FloatDelegate())
+            self.ui.table_imputaciones.setItemDelegateForColumn(2, FloatDelegate(highlight_color=self.highlight_color))
             self.ui.table_imputaciones.resizeColumnsToContents()
             
             #Update table retenciones
@@ -102,11 +105,26 @@ class TableSIIF(QWidget):
             self.proxy_honorarios.setFilterKeyColumn(1)
             self.proxy_honorarios.layoutChanged.emit()
 
-
-        # print("deselected: ")
-        # for ix in deselected.indexes():
-        #     print(ix.data())
-
+    def delete_comprobante_siif(self):
+        #Get index of the selected items
+        indexes = self.ui.table_comprobantes.selectedIndexes()
+        if indexes:
+            #Retrive the index row
+            index = self.proxy_comprobantes_siif.mapToSource(indexes[0])
+            row = index.row()
+            #Get index of first column of selected row
+            nro_entrada_idx = self.model_comprobantes_siif.index(row, 0)
+            #Get data of selected index
+            nro_entrada = self.model_comprobantes_siif.data(nro_entrada_idx, role=0)
+            if QMessageBox.question(self, "Comprobante SIIF - Eliminar", 
+            f"¿Desea ELIMINAR el Nro de Comprobante SIIF: {nro_entrada}?",
+            QMessageBox.Yes|QMessageBox.No) == QMessageBox.Yes: 
+                # log.info(f'Agente {agente} eliminado')
+                #self.ui.lbl_test.setText(f'Agente {agente} eliminado')
+                self.proxy_comprobantes_siif.layoutAboutToBeChanged.emit()
+                test = self.model_comprobantes_siif.removeRow(row)
+                print(f'Pudo borrarse la Fila Nro: {row}? {test}')
+                return self.proxy_comprobantes_siif.layoutChanged.emit()
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

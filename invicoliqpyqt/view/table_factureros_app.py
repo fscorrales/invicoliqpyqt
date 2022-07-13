@@ -65,7 +65,9 @@ class TableFactureros(QWidget):
         self.ui.btn_edit.clicked.connect(self.edit_facturero)
         self.ui.btn_delete.clicked.connect(self.delete_facturero)
         self.horizontalHeader = self.ui.table.horizontalHeader()
-        self.horizontalHeader.sectionClicked.connect(self.on_view_horizontalHeader_sectionClicked)
+        # self.horizontalHeader.setContextMenuPolicy(QtCore.Qt.CustomContextMenu)
+        # self.horizontalHeader.customContextMenuRequested.connect(self.on_view_horizontalHeader_sectionClicked)
+        self.horizontalHeader.sectionDoubleClicked.connect(self.on_header_double_clicked)
 
     @QtCore.pyqtSlot(int, str)
     def on_text_changed(self, col, text):
@@ -121,7 +123,7 @@ class TableFactureros(QWidget):
                 return self.proxy.removeRow(row), self.model.select()
 
     @QtCore.pyqtSlot(int)
-    def on_view_horizontalHeader_sectionClicked(self, logicalIndex):
+    def on_header_double_clicked(self, logicalIndex):
 
         self.logicalIndex   = logicalIndex
         self.menuValues     = QMenu(self)

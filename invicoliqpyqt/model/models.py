@@ -34,23 +34,6 @@ class ModelHonorariosFactureros(QSqlTableModel):
         while self.model.canFetchMore():
             self.model.fetchMore()
 
-class ModelComprobantesSIIF(QSqlQueryModel):
-    def __init__(self, *args, **kwargs):
-        super(ModelComprobantesSIIF, self).__init__(*args, **kwargs)
-        query = ("SELECT c.nro_entrada, substr(c.nro_entrada, 1, 5) AS comprobante, " +
-                "'20' || substr(c.nro_entrada, 7, 8) AS ejercicio, "+ 
-                "c.fecha, c.tipo, h.importe_bruto "+ 
-                "FROM comprobantes_siif AS c LEFT JOIN " +
-                "(SELECT nro_entrada, sum(importe_bruto) AS importe_bruto " + 
-                "FROM honorarios_factureros GROUP BY nro_entrada) AS h " +
-                "ON c.nro_entrada = h.nro_entrada " +
-                "ORDER BY fecha DESC, comprobante DESC")
-        
-        self.model = QSqlQueryModel()
-        
-        self.model.setQuery(query)
-
-
 class ModelImputacionesSIIF(QSqlQueryModel):
     def __init__(self,*args, **kwargs):
         super(ModelImputacionesSIIF, self).__init__(*args, **kwargs)

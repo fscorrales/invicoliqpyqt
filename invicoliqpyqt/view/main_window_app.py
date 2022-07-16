@@ -1,7 +1,7 @@
 import sys
 
-from invicoliqpyqt.model.models import (ModelComprobantesSIIF, ModelFactureros,
-                                        ModelHonorariosFactureros)
+from invicoliqpyqt.model.models import (ModelFactureros, ModelHonorariosFactureros)
+from invicoliqpyqt.model.comprobantes_siif import ModelComprobantesSIIF
 from invicoliqpyqt.view.form_facturero_app import FormFacturero
 from invicoliqpyqt.view.main_window import Ui_main_window
 from invicoliqpyqt.view.table_factureros_app import TableFactureros
@@ -53,7 +53,7 @@ class MainWindow(QMainWindow):
         sub = QMdiSubWindow()
 		# Set The Titlebar or the Sub Window
         # sub.setWindowTitle("Subby Window")
-        sub.setWidget(TableSIIF(self.model_comprobantes_siif.model))
+        sub.setWidget(TableSIIF(self.model_comprobantes_siif))
         sub.setAttribute(Qt.WA_DeleteOnClose, True)
         sub.resize(800, 550)
         sub.setWindowFlags(Qt.CustomizeWindowHint | 

@@ -32,7 +32,7 @@
      <x>0</x>
      <y>0</y>
      <width>484</width>
-     <height>21</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="mnu_archivo">
@@ -52,14 +52,7 @@
     <property name="title">
      <string>SIIF</string>
     </property>
-    <widget class="QMenu" name="menuComprobantes">
-     <property name="title">
-      <string>Comprobantes</string>
-     </property>
-     <addaction name="mnu_add_comprobante_siif"/>
-     <addaction name="mnu_list_comprobantes_siif"/>
-    </widget>
-    <addaction name="menuComprobantes"/>
+    <addaction name="mnu_list_comprobantes_siif"/>
    </widget>
    <addaction name="mnu_archivo"/>
    <addaction name="mnu_siif"/>
@@ -75,14 +68,9 @@
     <string>Listado Factureros</string>
    </property>
   </action>
-  <action name="mnu_add_comprobante_siif">
-   <property name="text">
-    <string>Nuevo Comprobante</string>
-   </property>
-  </action>
   <action name="mnu_list_comprobantes_siif">
    <property name="text">
-    <string>Listado Comprobantes</string>
+    <string>Comprobants SIIF</string>
    </property>
   </action>
  </widget>

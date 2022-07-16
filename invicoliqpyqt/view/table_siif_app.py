@@ -1,6 +1,7 @@
 import sys
 
 from invicoliqpyqt.model.models import ModelHonorariosFactureros
+from invicoliqpyqt.model.comprobantes_siif import ModelComprobantesSIIF
 from invicoliqpyqt.utils.delegates import FloatDelegate, MultipleDelegate
 from invicoliqpyqt.view.table_siif import Ui_table_siif
 from PyQt5.QtCore import QSortFilterProxyModel, Qt
@@ -10,7 +11,7 @@ from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QWidget, QMessageBox
 
 # Inherit from QMainWindow
 class TableSIIF(QWidget):
-    def __init__(self, model, parent = None):
+    def __init__(self, model_object, parent = None):
         super(TableSIIF, self).__init__(parent)
         
         # Set up ui
@@ -18,9 +19,9 @@ class TableSIIF(QWidget):
         self.ui.setupUi(self)
 
         #Set up model
-        self.model_comprobantes_siif = model
+        self.model_comprobantes_siif = ModelComprobantesSIIF(self)
         self.proxy_comprobantes_siif = QSortFilterProxyModel(self)
-        self.proxy_comprobantes_siif.setSourceModel(self.model_comprobantes_siif)
+        self.proxy_comprobantes_siif.setSourceModel(self.model_comprobantes_siif.model)
         self.model_honorarios = ModelHonorariosFactureros(self).model
         self.proxy_honorarios = QSortFilterProxyModel(self)
         self.proxy_honorarios.setSourceModel(self.model_honorarios)
@@ -113,18 +114,19 @@ class TableSIIF(QWidget):
             index = self.proxy_comprobantes_siif.mapToSource(indexes[0])
             row = index.row()
             #Get index of first column of selected row
-            nro_entrada_idx = self.model_comprobantes_siif.index(row, 0)
+            nro_entrada_idx = self.model_comprobantes_siif.model.index(row, 0)
             #Get data of selected index
-            nro_entrada = self.model_comprobantes_siif.data(nro_entrada_idx, role=0)
+            nro_entrada = self.model_comprobantes_siif.model.data(nro_entrada_idx, role=0)
             if QMessageBox.question(self, "Comprobante SIIF - Eliminar", 
             f"¿Desea ELIMINAR el Nro de Comprobante SIIF: {nro_entrada}?",
             QMessageBox.Yes|QMessageBox.No) == QMessageBox.Yes: 
                 # log.info(f'Agente {agente} eliminado')
-                #self.ui.lbl_test.setText(f'Agente {agente} eliminado')
                 self.proxy_comprobantes_siif.layoutAboutToBeChanged.emit()
-                test = self.model_comprobantes_siif.removeRow(row)
-                print(f'Pudo borrarse la Fila Nro: {row}? {test}')
-                return self.proxy_comprobantes_siif.layoutChanged.emit()
+                result = self.model_comprobantes_siif.delete_row(nro_entrada)
+                # print(f'Pudo borrarse la Fila Nro: {row}? {test}')
+                self.proxy_comprobantes_siif.layoutChanged.emit()
+                if result:
+                    return True
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

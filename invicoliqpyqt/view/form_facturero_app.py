@@ -30,7 +30,7 @@ class FormFacturero(QDialog):
 		# Open The Image
         parent_dir = os.path.dirname
         self.fname = os.path.join(parent_dir(parent_dir(__file__)), 
-        'static/images/form_factureros_agregar.jpg')
+        'static/images/form_facturero_agregar.jpg')
         self.pixmap = QPixmap(self.fname)
         #Scale Pic
         self.ui.lbl_img.setScaledContents(True)

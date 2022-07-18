@@ -4,6 +4,7 @@ from invicoliqpyqt.model.comprobantes_siif import (ModelComprobantesSIIF,
                                                    ModelImputacionesSIIF,
                                                    ModelRetencionesSIIF)
 from invicoliqpyqt.model.models import ModelHonorariosFactureros
+from invicoliqpyqt.view.form_comprobante_siif_app import FormComprobanteSIIF
 from invicoliqpyqt.utils.delegates import FloatDelegate, MultipleDelegate
 from invicoliqpyqt.view.table_siif import Ui_table_siif
 from PyQt5.QtCore import QSortFilterProxyModel, Qt
@@ -37,7 +38,7 @@ class TableSIIF(QWidget):
 
         #Set table properties
         self.ui.table_comprobantes.hideColumn(0)
-        self.ui.table_comprobantes.setItemDelegate(MultipleDelegate([5], [3], highlight_color=self.highlight_color))
+        self.ui.table_comprobantes.setItemDelegate(MultipleDelegate([5,6,7], [3], highlight_color=self.highlight_color))
         self.ui.table_comprobantes.resizeColumnsToContents()
         self.ui.table_comprobantes.setSortingEnabled(True)
         self.ui.table_comprobantes.sortByColumn(3, Qt.DescendingOrder)
@@ -51,6 +52,7 @@ class TableSIIF(QWidget):
 
         #Set slot connection
         self.ui.table_comprobantes.selectionModel().selectionChanged.connect(self.show_detail)
+        self.ui.btn_add.clicked.connect(self.add_comprobante_siif)
         self.ui.btn_delete.clicked.connect(self.delete_comprobante_siif)
 
         #Select first row
@@ -89,6 +91,11 @@ class TableSIIF(QWidget):
             self.proxy_honorarios.setFilterFixedString(str(cyo_id))
             self.proxy_honorarios.setFilterKeyColumn(1)
             self.proxy_honorarios.layoutChanged.emit()
+
+    def add_comprobante_siif(self):
+        # Open second window
+        self.window_add_comprobante_siif = FormComprobanteSIIF(self.model_comprobantes_siif)
+        self.window_add_comprobante_siif.show()
 
     def delete_comprobante_siif(self):
         nro_entrada = self.get_selected_nro_entrada()

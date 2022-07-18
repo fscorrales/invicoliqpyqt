@@ -11,9 +11,12 @@ class ModelComprobantesSIIF(QSqlQueryModel):
         super(ModelComprobantesSIIF, self).__init__(*args, **kwargs)
         self.main_query = ("SELECT c.nro_entrada, substr(c.nro_entrada, 1, 5) AS comprobante, " +
                 "'20' || substr(c.nro_entrada, 7, 8) AS ejercicio, "+ 
-                "c.fecha, c.tipo, h.importe_bruto "+ 
+                "c.fecha, c.tipo, h.importe_bruto, h.retenciones, "+ 
+                "(h.importe_bruto - h.retenciones) AS importe_neto " +
                 "FROM comprobantes_siif AS c LEFT JOIN " +
-                "(SELECT nro_entrada, sum(importe_bruto) AS importe_bruto " + 
+                "(SELECT nro_entrada, sum(importe_bruto) AS importe_bruto, " +
+                "sum(iibb + libramiento_pago + sellos + seguro + mutual + embargo + " +
+                "otras_retenciones + anticipo) AS retenciones "
                 "FROM honorarios_factureros GROUP BY nro_entrada) AS h " +
                 "ON c.nro_entrada = h.nro_entrada " +
                 "ORDER BY fecha DESC, comprobante DESC")
@@ -21,6 +24,15 @@ class ModelComprobantesSIIF(QSqlQueryModel):
         self.model = QSqlQueryModel()
         
         self.model.setQuery(self.main_query)
+
+        self.model.setHeaderData(0, Qt.Horizontal, "ID")
+        self.model.setHeaderData(1, Qt.Horizontal, "Comprobante")
+        self.model.setHeaderData(2, Qt.Horizontal, "Ejercicio")
+        self.model.setHeaderData(3, Qt.Horizontal, "Fecha")
+        self.model.setHeaderData(4, Qt.Horizontal, "Tipo")
+        self.model.setHeaderData(5, Qt.Horizontal, "Importe Bruto")
+        self.model.setHeaderData(6, Qt.Horizontal, "Retenciones")
+        self.model.setHeaderData(7, Qt.Horizontal, "Importe Neto")
 
     def delete_row(self, nro_entrada):
         msg = QMessageBox()

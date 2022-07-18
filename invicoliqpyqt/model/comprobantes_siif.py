@@ -68,4 +68,23 @@ class ModelImputacionesSIIF(QSqlQueryModel):
 
         self.model.setHeaderData(0, Qt.Horizontal, "Estructura")
         self.model.setHeaderData(1, Qt.Horizontal, "Partida")
-        self.model.setHeaderData(2, Qt.Horizontal, "Ejecutado")
+        self.model.setHeaderData(2, Qt.Horizontal, "Importe Ejecutado")
+
+class ModelRetencionesSIIF(QSqlQueryModel):
+    def __init__(self, id = None, *args, **kwargs):
+        super(ModelRetencionesSIIF, self).__init__(*args, **kwargs)
+        self.cyo_id = id
+        self.main_query = ('SELECT "101" AS codigo, sum(iibb) AS importe ' +
+                        'FROM honorarios_factureros ' +
+                        f'WHERE nro_entrada = "{self.cyo_id}" ' +
+                        'UNION ALL ' +
+                        'SELECT "102" AS codigo, sum(sellos) AS importe '+
+                        'FROM honorarios_factureros ' +
+                        f'WHERE nro_entrada = "{self.cyo_id}"')
+        
+        self.model = QSqlQueryModel()
+        
+        self.model.setQuery(self.main_query)
+
+        self.model.setHeaderData(0, Qt.Horizontal, "Codigo Retencion")
+        self.model.setHeaderData(1, Qt.Horizontal, "Importe Retenido")

@@ -1,12 +1,14 @@
 import sys
 
+from invicoliqpyqt.model.comprobantes_siif import (ModelComprobantesSIIF,
+                                                   ModelImputacionesSIIF,
+                                                   ModelRetencionesSIIF)
 from invicoliqpyqt.model.models import ModelHonorariosFactureros
-from invicoliqpyqt.model.comprobantes_siif import ModelComprobantesSIIF, ModelImputacionesSIIF
 from invicoliqpyqt.utils.delegates import FloatDelegate, MultipleDelegate
 from invicoliqpyqt.view.table_siif import Ui_table_siif
 from PyQt5.QtCore import QSortFilterProxyModel, Qt
-from PyQt5.QtSql import QSqlQuery
-from PyQt5.QtWidgets import QApplication, QTableWidgetItem, QWidget, QMessageBox
+from PyQt5.QtWidgets import (QApplication, QMessageBox,
+                             QWidget)
 
 
 # Inherit from QMainWindow
@@ -77,23 +79,11 @@ class TableSIIF(QWidget):
             self.ui.table_imputaciones.resizeColumnsToContents()
 
             #Update table retenciones
-            # self.ui.table_retenciones.setRowCount(0)
-            # self.ui.table_retenciones.setColumnCount(3)
-            # self.ui.table_retenciones.setHorizontalHeaderLabels(["Estructura", "Partida", "Ejecutado"])
-            # query = QSqlQuery('SELECT estructura, partida, ' + 
-            #                     'sum(importe_bruto) as ejecutado ' + 
-            #                     'FROM honorarios_factureros ' + 
-            #                     f'WHERE nro_entrada = "{cyo_id}" '
-            #                     'GROUP BY estructura, partida')
-            # while query.next():
-            #     rows = self.ui.table_retenciones.rowCount()
-            #     self.ui.table_retenciones.setRowCount(rows + 1)
-            #     self.ui.table_retenciones.setItem(rows, 0, QTableWidgetItem(query.value(0)))
-            #     self.ui.table_retenciones.setItem(rows, 1, QTableWidgetItem(query.value(1)))
-            #     self.ui.table_retenciones.setItem(rows, 2, QTableWidgetItem(str(query.value(2))))
-            # self.ui.table_retenciones.setItemDelegateForColumn(2, FloatDelegate())
-            # self.ui.table_retenciones.resizeColumnsToContents()
-            
+            self.model_retenciones_siif = ModelRetencionesSIIF(id = cyo_id)
+            self.ui.table_retenciones.setModel(self.model_retenciones_siif.model)
+            self.ui.table_retenciones.setItemDelegateForColumn(1, FloatDelegate(highlight_color=self.highlight_color))
+            self.ui.table_retenciones.resizeColumnsToContents()
+                        
             #Update table honorarios (tab_honorarios)
             self.proxy_honorarios.layoutAboutToBeChanged.emit()
             self.proxy_honorarios.setFilterFixedString(str(cyo_id))

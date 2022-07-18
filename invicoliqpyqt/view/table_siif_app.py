@@ -43,7 +43,7 @@ class TableSIIF(QWidget):
         self.ui.table_comprobantes.sortByColumn(3, Qt.DescendingOrder)
         self.ui.table_honorarios.hideColumn(0)
         self.ui.table_honorarios.hideColumn(1)
-        self.ui.table_honorarios.setItemDelegate(MultipleDelegate(range(3,11), highlight_color=self.highlight_color))
+        self.ui.table_honorarios.setItemDelegate(MultipleDelegate(range(3,12), highlight_color=self.highlight_color))
         self.ui.table_honorarios.verticalHeader().setVisible(False)
         # self.ui.table_honorarios.setItemDelegateForColumn(4, FloatDelegate())
         self.ui.table_honorarios.setSortingEnabled(True)

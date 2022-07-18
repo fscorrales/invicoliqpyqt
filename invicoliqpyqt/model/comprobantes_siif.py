@@ -80,6 +80,22 @@ class ModelRetencionesSIIF(QSqlQueryModel):
                         'UNION ALL ' +
                         'SELECT "102" AS codigo, sum(sellos) AS importe '+
                         'FROM honorarios_factureros ' +
+                        f'WHERE nro_entrada = "{self.cyo_id}" ' +
+                        'UNION ALL ' +
+                        'SELECT "104" AS codigo, sum(libramiento_pago) AS importe '+
+                        'FROM honorarios_factureros ' +
+                        f'WHERE nro_entrada = "{self.cyo_id}" ' + 
+                        'UNION ALL ' +
+                        'SELECT "255" AS codigo, sum(embargo) AS importe '+
+                        'FROM honorarios_factureros ' +
+                        f'WHERE nro_entrada = "{self.cyo_id}" ' + 
+                        'UNION ALL ' +
+                        'SELECT "341" AS codigo, sum(mutual) AS importe '+
+                        'FROM honorarios_factureros ' +
+                        f'WHERE nro_entrada = "{self.cyo_id}" ' + 
+                        'UNION ALL ' +
+                        'SELECT "413" AS codigo, sum(seguro) AS importe '+
+                        'FROM honorarios_factureros ' +
                         f'WHERE nro_entrada = "{self.cyo_id}"')
         
         self.model = QSqlQueryModel()

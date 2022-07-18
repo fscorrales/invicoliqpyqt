@@ -28,24 +28,13 @@ class ModelHonorariosFactureros(QSqlTableModel):
         self.model.setHeaderData(7, QtCore.Qt.Horizontal, "Seguro")
         self.model.setHeaderData(8, QtCore.Qt.Horizontal, "Otras Ret.")
         self.model.setHeaderData(9, QtCore.Qt.Horizontal, "Ant.")
-        self.model.setHeaderData(10, QtCore.Qt.Horizontal, "Desc.")
-        self.model.setHeaderData(11, QtCore.Qt.Horizontal, "Estructura")
-        self.model.setHeaderData(12, QtCore.Qt.Horizontal, "Partida")
+        self.model.setHeaderData(10, QtCore.Qt.Horizontal, "Mutual")
+        self.model.setHeaderData(11, QtCore.Qt.Horizontal, "Embargo")
+        self.model.setHeaderData(12, QtCore.Qt.Horizontal, "Estructura")
+        self.model.setHeaderData(13, QtCore.Qt.Horizontal, "Partida")
         self.model.select()
         while self.model.canFetchMore():
             self.model.fetchMore()
-
-class ModelImputacionesSIIF(QSqlQueryModel):
-    def __init__(self,*args, **kwargs):
-        super(ModelImputacionesSIIF, self).__init__(*args, **kwargs)
-        query = ('SELECT nro_entrada, estructura, partida, ' + 
-                'sum(importe_bruto) as ejecutado ' + 
-                'FROM honorarios_factureros ' + 
-                'GROUP BY nro_entrada')
-        
-        self.model = QSqlQueryModel()
-        
-        self.model.setQuery(query)
 
 class CustomMultipleFilter(QtCore.QSortFilterProxyModel):
     def __init__(self, parent=None):

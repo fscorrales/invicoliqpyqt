@@ -1,3 +1,4 @@
+from datetime import date
 import os
 import sys
 from dataclasses import dataclass
@@ -12,7 +13,7 @@ from PyQt5.QtWidgets import QApplication, QDialog
 @dataclass
 class ComprobanteSIIF():
     nro_entrada: str = ''
-    fecha: str = ''
+    fecha: date = QDate.currentDate()
     tipo: str = ''
 
 class FormComprobanteSIIF(QDialog):
@@ -31,6 +32,12 @@ class FormComprobanteSIIF(QDialog):
         self.ui.dat_fecha.setCalendarPopup(True)
         # self.menuBar().setCornerWidget(self.ui.dat_fecha, Qt.TopLeftCorner)
         self.ui.dat_fecha.setDate(QDate.currentDate())
+
+        # Add items to ComboBox tipo
+        self.ui.cmb_tipo.addItem("Honorarios", "H")
+        self.ui.cmb_tipo.addItem("Comisiones", "C")
+        self.ui.cmb_tipo.addItem("Horas Extras", "E")
+        self.ui.cmb_tipo.addItem("L", "L")
 
 		# Open The Image
         parent_dir = os.path.dirname
@@ -51,12 +58,12 @@ class FormComprobanteSIIF(QDialog):
 
 
     def save(self) -> bool:
-        pass
-        # registro = Facturero(
-        #     self.ui.txt_nombre.text(),
-        #     self.ui.txt_estructura.text(),
-        #     self.ui.txt_partida.text(),
-        # )
+        registro = ComprobanteSIIF(
+            self.ui.txt_nro_entrada.text(),
+            self.ui.dat_fecha.date(),
+            self.ui.cmb_tipo.currentData(),
+        )
+        print(registro)
         # try:
         #     # Create a record
         #     rec = self.model_facturero.record()

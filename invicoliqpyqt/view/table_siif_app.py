@@ -1,7 +1,7 @@
 import sys
 
 from invicoliqpyqt.model.models import ModelHonorariosFactureros
-from invicoliqpyqt.model.comprobantes_siif import ModelComprobantesSIIF
+from invicoliqpyqt.model.comprobantes_siif import ModelComprobantesSIIF, ModelImputacionesSIIF
 from invicoliqpyqt.utils.delegates import FloatDelegate, MultipleDelegate
 from invicoliqpyqt.view.table_siif import Ui_table_siif
 from PyQt5.QtCore import QSortFilterProxyModel, Qt
@@ -55,7 +55,7 @@ class TableSIIF(QWidget):
         self.ui.tab_siif.setCurrentIndex(0)
         self.ui.table_comprobantes.selectRow(0)
 
-    def show_detail(self):
+    def get_selected_nro_entrada(self) -> str:
         indexes = self.ui.table_comprobantes.selectedIndexes()
         if indexes:
             #Get N° Entrada SIIF
@@ -63,25 +63,19 @@ class TableSIIF(QWidget):
             row = index.row()
             cyo_id = self.proxy_comprobantes_siif.index(row, 0)
             cyo_id = self.proxy_comprobantes_siif.data(cyo_id, role=0)
-            
-            #Update table imputaciones
-            self.ui.table_imputaciones.setRowCount(0)
-            self.ui.table_imputaciones.setColumnCount(3)
-            self.ui.table_imputaciones.setHorizontalHeaderLabels(["Estructura", "Partida", "Ejecutado"])
-            query = QSqlQuery('SELECT estructura, partida, ' + 
-                                'sum(importe_bruto) as ejecutado ' + 
-                                'FROM honorarios_factureros ' + 
-                                f'WHERE nro_entrada = "{cyo_id}" '
-                                'GROUP BY estructura, partida')
-            while query.next():
-                rows = self.ui.table_imputaciones.rowCount()
-                self.ui.table_imputaciones.setRowCount(rows + 1)
-                self.ui.table_imputaciones.setItem(rows, 0, QTableWidgetItem(query.value(0)))
-                self.ui.table_imputaciones.setItem(rows, 1, QTableWidgetItem(query.value(1)))
-                self.ui.table_imputaciones.setItem(rows, 2, QTableWidgetItem(str(query.value(2))))
+            return cyo_id
+        else:
+            return False
+
+    def show_detail(self):
+        cyo_id = self.get_selected_nro_entrada()
+        if cyo_id:            
+            #Update table Imputaciones
+            self.model_imputaciones_siif = ModelImputacionesSIIF(id = cyo_id)
+            self.ui.table_imputaciones.setModel(self.model_imputaciones_siif.model)
             self.ui.table_imputaciones.setItemDelegateForColumn(2, FloatDelegate(highlight_color=self.highlight_color))
             self.ui.table_imputaciones.resizeColumnsToContents()
-            
+
             #Update table retenciones
             # self.ui.table_retenciones.setRowCount(0)
             # self.ui.table_retenciones.setColumnCount(3)
@@ -107,16 +101,8 @@ class TableSIIF(QWidget):
             self.proxy_honorarios.layoutChanged.emit()
 
     def delete_comprobante_siif(self):
-        #Get index of the selected items
-        indexes = self.ui.table_comprobantes.selectedIndexes()
-        if indexes:
-            #Retrive the index row
-            index = self.proxy_comprobantes_siif.mapToSource(indexes[0])
-            row = index.row()
-            #Get index of first column of selected row
-            nro_entrada_idx = self.model_comprobantes_siif.model.index(row, 0)
-            #Get data of selected index
-            nro_entrada = self.model_comprobantes_siif.model.data(nro_entrada_idx, role=0)
+        nro_entrada = self.get_selected_nro_entrada()
+        if nro_entrada:
             if QMessageBox.question(self, "Comprobante SIIF - Eliminar", 
             f"¿Desea ELIMINAR el Nro de Comprobante SIIF: {nro_entrada}?",
             QMessageBox.Yes|QMessageBox.No) == QMessageBox.Yes: 
@@ -125,8 +111,7 @@ class TableSIIF(QWidget):
                 result = self.model_comprobantes_siif.delete_row(nro_entrada)
                 # print(f'Pudo borrarse la Fila Nro: {row}? {test}')
                 self.proxy_comprobantes_siif.layoutChanged.emit()
-                if result:
-                    return True
+                
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

@@ -1,6 +1,7 @@
 from PyQt5 import QtCore
 from PyQt5.QtSql import QSqlTableModel, QSqlQueryModel
 
+
 class ModelFactureros(QSqlTableModel):
     def __init__(self, *args, **kwargs):
         super(ModelFactureros, self).__init__(*args, **kwargs)

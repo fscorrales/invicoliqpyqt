@@ -1,7 +1,8 @@
 import re
 
+from invicoliqpyqt.utils.logger import log
+from PyQt5.QtCore import QModelIndex, Qt
 from PyQt5.QtSql import QSqlQuery, QSqlQueryModel
-from PyQt5.QtCore import QModelIndex
 from PyQt5.QtWidgets import QMessageBox
 
 
@@ -23,6 +24,7 @@ class ModelComprobantesSIIF(QSqlQueryModel):
 
     def delete_row(self, nro_entrada):
         msg = QMessageBox()
+        msg.setWindowTitle('Eliminación comprobante SIIF')
         patron = r'\d{5}/\d{2}'
         self.validator = re.compile(patron)
         self.id = nro_entrada
@@ -37,10 +39,33 @@ class ModelComprobantesSIIF(QSqlQueryModel):
                 self.model.setQuery(self.main_query)
                 self.model.endRemoveRows()
                 msg.setText(f'Comprobante Nro {self.id} ELIMINADO')
+                msg.setIcon(QMessageBox.Information)
                 msg.exec_()
+                log.info(f'Comprobante SIIF Nro {self.id} eliminado')                
                 return True
             else:
-                query.lastError()
+                print(query.lastError())
                 return False
         else:
+            msg.setText(f'Comprobante Nro {self.id} no cumple con el patrón 00000/00')
+            msg.setIcon(QMessageBox.Critical)
+            msg.exec_()
             return False
+
+class ModelImputacionesSIIF(QSqlQueryModel):
+    def __init__(self, id = None, *args, **kwargs):
+        super(ModelImputacionesSIIF, self).__init__(*args, **kwargs)
+        self.cyo_id = id
+        self.main_query = ('SELECT estructura, partida, ' + 
+                                'sum(importe_bruto) as ejecutado ' + 
+                                'FROM honorarios_factureros ' + 
+                                f'WHERE nro_entrada = "{self.cyo_id}" '
+                                'GROUP BY estructura, partida')
+        
+        self.model = QSqlQueryModel()
+        
+        self.model.setQuery(self.main_query)
+
+        self.model.setHeaderData(0, Qt.Horizontal, "Estructura")
+        self.model.setHeaderData(1, Qt.Horizontal, "Partida")
+        self.model.setHeaderData(2, Qt.Horizontal, "Ejecutado")

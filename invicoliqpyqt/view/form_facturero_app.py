@@ -3,6 +3,7 @@ import sys
 from dataclasses import dataclass
 
 from invicoliqpyqt.utils.logger import log
+from invicoliqpyqt.utils.sqlite import sqlite_unique_value
 from invicoliqpyqt.view.form_facturero import Ui_form_facturero
 from PyQt5.QtCore import QModelIndex, QRegExp
 from PyQt5.QtGui import QPixmap, QRegExpValidator
@@ -16,7 +17,8 @@ class Facturero():
     partida: str = ''
 
 class FormFacturero(QDialog):
-    def __init__(self, model, row_edit = None, parent = None):
+    def __init__(self, model, row_edit = None, nombre_edit = None,
+                parent = None):
         super(FormFacturero, self).__init__(parent)
         
         # Set up UI
@@ -26,6 +28,7 @@ class FormFacturero(QDialog):
         # Set up model
         self.model_facturero = model
         self.row_edit = row_edit
+        self.nombre_edit = nombre_edit
 
 		# Open The Image
         parent_dir = os.path.dirname
@@ -42,7 +45,7 @@ class FormFacturero(QDialog):
         self.ui.txt_partida.setInputMask('999;_')
 
         # Validator
-        self.txt_nombre_validator = QRegExpValidator(QRegExp('\w+'), self.ui.txt_nombre)
+        self.txt_nombre_validator = QRegExpValidator(QRegExp("[\w áÁéÉíÍóÓúÚñÑüÜ'_,.]+"), self.ui.txt_nombre)
         self.ui.txt_nombre.setValidator(self.txt_nombre_validator)
 
         # Enable / Disable save button
@@ -51,18 +54,33 @@ class FormFacturero(QDialog):
 
         #Set slot connection
         self.ui.btn_box.accepted.connect(self.save)
+        self.ui.txt_nombre.textChanged.connect(self.enable_btn_save)
         self.ui.txt_estructura.textChanged.connect(self.enable_btn_save)
         self.ui.txt_partida.textChanged.connect(self.enable_btn_save)
 
         #Set Modal
         self.setModal(True)
 
+    def unique_razon_social(self) -> bool:
+        search_value = self.ui.txt_nombre.text()
+        
+        # if editing row
+        if (self.nombre_edit != None) and (search_value == self.nombre_edit):
+            return True
+
+        if self.ui.txt_nombre.hasAcceptableInput():
+            if sqlite_unique_value('factureros', 'razon_social', 
+            search_value):
+                return True
+            else:
+                return False
+
     def enable_btn_save(self):
-        if (self.ui.txt_estructura.hasAcceptableInput() and 
-        self.ui.txt_partida.hasAcceptableInput()):
-            self.btn_save.setEnabled(True)
-        else:
-            self.btn_save.setEnabled(False)
+        self.btn_save.setEnabled(False)
+        if self.unique_razon_social():
+            if (self.ui.txt_estructura.hasAcceptableInput() and 
+            self.ui.txt_partida.hasAcceptableInput()):
+                self.btn_save.setEnabled(True)
 
     def save(self) -> bool:
         if self.ui.txt_estructura.hasAcceptableInput():

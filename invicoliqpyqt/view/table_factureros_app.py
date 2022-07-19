@@ -98,7 +98,7 @@ class TableFactureros(QWidget):
             facturero_estructura = self.model.data(facturero_estructura, role=0)
             facturero_partida = self.model.data(facturero_partida, role=0)
             # Open second window in edit mode
-            self.window_add_facturero = FormFacturero(self.model, row)
+            self.window_add_facturero = FormFacturero(self.model, row, facturero_nombre)
             self.window_add_facturero.ui.txt_nombre.setText(facturero_nombre)
             self.window_add_facturero.ui.txt_estructura.setText(facturero_estructura)
             self.window_add_facturero.ui.txt_partida.setText(facturero_partida)

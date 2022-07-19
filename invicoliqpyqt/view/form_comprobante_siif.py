@@ -71,7 +71,7 @@ class Ui_form_comprobante_siif(object):
 
     def retranslateUi(self, form_comprobante_siif):
         _translate = QtCore.QCoreApplication.translate
-        form_comprobante_siif.setWindowTitle(_translate("form_comprobante_siif", "Agregar / Editar Facturero"))
+        form_comprobante_siif.setWindowTitle(_translate("form_comprobante_siif", "Agregar / Editar Comprobante SIIF"))
         self.lbl_titulo.setText(_translate("form_comprobante_siif", "<html><head/><body><p align=\"center\"><span style=\" font-size:14pt;\">Agregar SIIF</span></p></body></html>"))
         self.lbl_partida.setText(_translate("form_comprobante_siif", "Tipo"))
         self.lbl_estructura.setText(_translate("form_comprobante_siif", "Fecha"))

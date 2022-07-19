@@ -1,13 +1,14 @@
-from datetime import date
 import os
 import sys
 from dataclasses import dataclass
+from datetime import date
 
 from invicoliqpyqt.utils.logger import log
+from invicoliqpyqt.utils.sqlite import sqlite_unique_value
 from invicoliqpyqt.view.form_comprobante_siif import Ui_form_comprobante_siif
-from PyQt5.QtCore import Qt, QDate, QRegExp
+from PyQt5.QtCore import QDate, QRegExp, Qt
 from PyQt5.QtGui import QPixmap, QRegExpValidator
-from PyQt5.QtWidgets import QApplication, QDialog
+from PyQt5.QtWidgets import QApplication, QDialog, QDialogButtonBox
 
 
 @dataclass
@@ -54,12 +55,41 @@ class FormComprobanteSIIF(QDialog):
         self.txt_nro_entrada_validador = QRegExpValidator(QRegExp('\d{1,5}'), self.ui.txt_nro_entrada)
         self.ui.txt_nro_entrada.setValidator(self.txt_nro_entrada_validador)
 
+        # Enable / Disable save button
+        self.btn_save = self.ui.btn_box.button(QDialogButtonBox.Save)
+        self.enable_btn_save()
+
         #Set slot connection
         self.ui.btn_box.accepted.connect(self.save)
+        self.ui.txt_nro_entrada.textChanged.connect(self.enable_btn_save)
+        self.ui.dat_fecha.dateChanged.connect(self.enable_btn_save)
 
         #Set Modal
         self.setModal(True)
 
+    def get_complete_nro_entrada(self) -> str:
+        self.complete_nro_entrada = (self.ui.txt_nro_entrada.text().zfill(5) + '/' + 
+                        str(self.ui.dat_fecha.date().year())[-2:])
+        return self.complete_nro_entrada
+
+    def unique_nro_entrada(self) -> bool:
+        search_value = self.get_complete_nro_entrada()
+        
+        # if editing row
+        if (self.nro_entrada_edit != None) and (search_value == self.nro_entrada_edit):
+            return True
+
+        if self.ui.txt_nro_entrada.hasAcceptableInput():
+            if sqlite_unique_value('comprobantes_siif', 'nro_entrada', 
+            search_value):
+                return True
+            else:
+                return False
+
+    def enable_btn_save(self):
+        self.btn_save.setEnabled(False)
+        if self.unique_nro_entrada():
+            self.btn_save.setEnabled(True)
 
     def save(self) -> bool:
         registro = ComprobanteSIIF(

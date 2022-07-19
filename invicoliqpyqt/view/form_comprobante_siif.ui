@@ -14,7 +14,7 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>Agregar / Editar Facturero</string>
+   <string>Agregar / Editar Comprobante SIIF</string>
   </property>
   <property name="sizeGripEnabled">
    <bool>false</bool>

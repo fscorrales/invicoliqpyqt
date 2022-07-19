@@ -5,8 +5,8 @@ from dataclasses import dataclass
 
 from invicoliqpyqt.utils.logger import log
 from invicoliqpyqt.view.form_comprobante_siif import Ui_form_comprobante_siif
-from PyQt5.QtCore import Qt, QDate
-from PyQt5.QtGui import QPixmap
+from PyQt5.QtCore import Qt, QDate, QRegExp
+from PyQt5.QtGui import QPixmap, QRegExpValidator
 from PyQt5.QtWidgets import QApplication, QDialog
 
 
@@ -49,6 +49,10 @@ class FormComprobanteSIIF(QDialog):
         self.ui.lbl_img.setScaledContents(True)
         # Add Pic to label
         self.ui.lbl_img.setPixmap(self.pixmap)
+
+        # Validator
+        self.txt_nro_entrada_validador = QRegExpValidator(QRegExp('\d{1,5}'), self.ui.txt_nro_entrada)
+        self.ui.txt_nro_entrada.setValidator(self.txt_nro_entrada_validador)
 
         #Set slot connection
         self.ui.btn_box.accepted.connect(self.save)

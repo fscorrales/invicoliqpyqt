@@ -34,6 +34,27 @@ class ModelComprobantesSIIF(QSqlQueryModel):
         self.model.setHeaderData(6, Qt.Horizontal, "Retenciones")
         self.model.setHeaderData(7, Qt.Horizontal, "Importe Neto")
 
+    def add_row(self, registro:dict) -> bool:
+        msg = QMessageBox()
+        msg.setWindowTitle('Adición comprobante SIIF')
+        try:
+            self.model.beginRemoveRows(QModelIndex(), self.model.rowCount(), self.model.rowCount())
+            query = QSqlQuery()
+            query.exec_('PRAGMA foreign_keys = ON')
+            # query.prepare('DELETE FROM comprobantes_siif WHERE nro_entrada = ?')
+            # query.bindValue(0, self.id)
+            # result = query.exec_()
+            # if result:
+            #     self.model.setQuery(self.main_query)
+            #     self.model.endRemoveRows()
+            #     msg.setText(f'Comprobante Nro {self.id} ELIMINADO')
+            #     msg.setIcon(QMessageBox.Information)
+            #     msg.exec_()
+            #     log.info(f'Comprobante SIIF Nro {self.id} eliminado')       
+            return True
+        except:
+            return False
+
     def delete_row(self, nro_entrada):
         msg = QMessageBox()
         msg.setWindowTitle('Eliminación comprobante SIIF')

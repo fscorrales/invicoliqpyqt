@@ -38,21 +38,40 @@ class ModelComprobantesSIIF(QSqlQueryModel):
         msg = QMessageBox()
         msg.setWindowTitle('Adición comprobante SIIF')
         try:
-            self.model.beginRemoveRows(QModelIndex(), self.model.rowCount(), self.model.rowCount())
+            # self.model.beginInsertRows(QModelIndex(), self.model.rowCount(), self.model.rowCount())
             query = QSqlQuery()
             query.exec_('PRAGMA foreign_keys = ON')
-            # query.prepare('DELETE FROM comprobantes_siif WHERE nro_entrada = ?')
-            # query.bindValue(0, self.id)
-            # result = query.exec_()
-            # if result:
-            #     self.model.setQuery(self.main_query)
-            #     self.model.endRemoveRows()
-            #     msg.setText(f'Comprobante Nro {self.id} ELIMINADO')
-            #     msg.setIcon(QMessageBox.Information)
-            #     msg.exec_()
-            #     log.info(f'Comprobante SIIF Nro {self.id} eliminado')       
-            return True
+            query.prepare('INSERT INTO comprobantes_siif(nro_entrada, fecha, tipo) '+
+                        'VALUES(?, ?, ?)')
+            query.bindValue(0, registro['nro_entrada'])
+            query.bindValue(1, registro['fecha'])
+            query.bindValue(2, registro['tipo'])
+            print(f"El campo {registro['fecha']} es del tipo {type(registro['fecha'])}")
+            result = query.exec_()
+            if result:
+                self.model.setQuery(self.main_query)
+                # self.model.endInsertRows()
+                text_msg = f"Comprobante Nro {registro['nro_entrada']} AGREGADO"
+                msg.setText(text_msg)
+                msg.setIcon(QMessageBox.Information)
+                msg.exec_()
+                log.info(text_msg)
+                return True
+            else:
+                text_msg = (f"Comprobante Nro {registro['nro_entrada']} no pudo ser agregado " +
+                            f"por el siguiente error {query.lastError().text()}")
+                msg.setIcon(QMessageBox.Critical)
+                msg.setText(text_msg)
+                msg.exec_()
+                log.info(text_msg) 
+                return False
         except:
+            # text_msg = (f"Comprobante Nro {registro['nro_entrada']} no pudo ser agregado " +
+            #             f"por el siguiente error {query.lastError()}")
+            # msg.setIcon(QMessageBox.Critical)
+            # msg.setText(text_msg)
+            # msg.exec_()
+            # log.info(text_msg) 
             return False
 
     def delete_row(self, nro_entrada):
@@ -77,7 +96,9 @@ class ModelComprobantesSIIF(QSqlQueryModel):
                 log.info(f'Comprobante SIIF Nro {self.id} eliminado')                
                 return True
             else:
-                print(query.lastError())
+                msg.setIcon(QMessageBox.Critical)
+                msg.setText(f"Comprobante Nro {self.id} no pudo ser ELIMINADO " +
+                            f"por el siguiente error {query.lastError().text()}")
                 return False
         else:
             msg.setText(f'Comprobante Nro {self.id} no cumple con el patrón 00000/00')

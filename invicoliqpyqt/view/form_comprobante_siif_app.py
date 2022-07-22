@@ -1,6 +1,6 @@
 import os
 import sys
-from dataclasses import dataclass
+from dataclasses import dataclass, asdict
 from datetime import date
 
 from invicoliqpyqt.utils.logger import log
@@ -93,29 +93,11 @@ class FormComprobanteSIIF(QDialog):
 
     def save(self) -> bool:
         registro = ComprobanteSIIF(
-            self.ui.txt_nro_entrada.text(),
+            self.complete_nro_entrada,
             self.ui.dat_fecha.date(),
             self.ui.cmb_tipo.currentData(),
         )
-        print(registro)
-        # try:
-        #     # Create a record
-        #     rec = self.model_facturero.record()
-        #     # Get new row values for the new record
-        #     rec.setGenerated('id', False)
-        #     rec.setValue('razon_social', registro.razon_social)
-        #     rec.setValue('estructura', registro.estructura)
-        #     rec.setValue('partida', registro.partida)
-        #     self.model_facturero.layoutAboutToBeChanged.emit()
-        #     if not self.row_edit:
-        #         test = self.model_facturero.insertRecord(self.model_facturero.rowCount(), rec)
-        #     else:
-        #         test = self.model_facturero.updateRowInTable(self.row_edit, rec)
-        #     print(f'¿Se pudo insertar el registro? = {test}')
-        #     self.model_facturero.select()
-        #     return True
-        # except:
-        #     return False
+        self.model_comprobante_siif.add_row(registro=asdict(registro))
 
 if __name__ == "__main__":
     app = QApplication(sys.argv)

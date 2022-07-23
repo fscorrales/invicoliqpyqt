@@ -53,6 +53,7 @@ class TableSIIF(QWidget):
         #Set slot connection
         self.ui.table_comprobantes.selectionModel().selectionChanged.connect(self.show_detail)
         self.ui.btn_add.clicked.connect(self.add_comprobante_siif)
+        self.ui.btn_edit.clicked.connect(self.edit_comprobante_siif)
         self.ui.btn_delete.clicked.connect(self.delete_comprobante_siif)
 
         #Select first row
@@ -95,6 +96,13 @@ class TableSIIF(QWidget):
     def add_comprobante_siif(self):
         # Open second window
         self.window_add_comprobante_siif = FormComprobanteSIIF(self.model_comprobantes_siif)
+        self.window_add_comprobante_siif.show()
+
+    def edit_comprobante_siif(self):
+        cyo_id = self.get_selected_nro_entrada()
+        # Open second window
+        self.window_add_comprobante_siif = FormComprobanteSIIF(self.model_comprobantes_siif, 
+                                                                cyo_id)
         self.window_add_comprobante_siif.show()
 
     def delete_comprobante_siif(self):

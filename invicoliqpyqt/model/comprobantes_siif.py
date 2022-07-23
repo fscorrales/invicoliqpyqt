@@ -46,7 +46,6 @@ class ModelComprobantesSIIF(QSqlQueryModel):
             query.bindValue(0, registro['nro_entrada'])
             query.bindValue(1, registro['fecha'])
             query.bindValue(2, registro['tipo'])
-            print(f"El campo {registro['fecha']} es del tipo {type(registro['fecha'])}")
             result = query.exec_()
             if result:
                 self.model.setQuery(self.main_query)
@@ -59,6 +58,47 @@ class ModelComprobantesSIIF(QSqlQueryModel):
                 return True
             else:
                 text_msg = (f"Comprobante Nro {registro['nro_entrada']} no pudo ser agregado " +
+                            f"por el siguiente error {query.lastError().text()}")
+                msg.setIcon(QMessageBox.Critical)
+                msg.setText(text_msg)
+                msg.exec_()
+                log.info(text_msg) 
+                return False
+        except:
+            # text_msg = (f"Comprobante Nro {registro['nro_entrada']} no pudo ser agregado " +
+            #             f"por el siguiente error {query.lastError()}")
+            # msg.setIcon(QMessageBox.Critical)
+            # msg.setText(text_msg)
+            # msg.exec_()
+            # log.info(text_msg) 
+            return False
+
+    def edit_row(self, registro:dict) -> bool:
+        msg = QMessageBox()
+        msg.setWindowTitle('Edición comprobante SIIF')
+        try:
+            # self.model.beginInsertRows(QModelIndex(), self.model.rowCount(), self.model.rowCount())
+            query = QSqlQuery()
+            query.exec_('PRAGMA foreign_keys = ON')
+            query.prepare('UPDATE comprobantes_siif '+
+                        'SET nro_entrada = ?, fecha = ?, tipo = ? ' + 
+                        'WHERE nro_entrada = ?')
+            query.bindValue(0, registro['nro_entrada'])
+            query.bindValue(1, registro['fecha'])
+            query.bindValue(2, registro['tipo'])
+            query.bindValue(3, registro['nro_entrada_prev'])
+            result = query.exec_()
+            if result:
+                self.model.setQuery(self.main_query)
+                # self.model.endInsertRows()
+                text_msg = f"Comprobante Nro {registro['nro_entrada_prev']} EDITADO"
+                msg.setText(text_msg)
+                msg.setIcon(QMessageBox.Information)
+                msg.exec_()
+                log.info(text_msg)
+                return True
+            else:
+                text_msg = (f"Comprobante Nro {registro['nro_entrada_prev']} no pudo ser editado " +
                             f"por el siguiente error {query.lastError().text()}")
                 msg.setIcon(QMessageBox.Critical)
                 msg.setText(text_msg)

@@ -3,7 +3,7 @@ import sys
 from dataclasses import dataclass
 
 from invicoliqpyqt.utils.logger import log
-from invicoliqpyqt.utils.sqlite import sqlite_unique_value
+from invicoliqpyqt.utils.sqlite import sqlite_is_unique
 from invicoliqpyqt.view.form_facturero import Ui_form_facturero
 from PyQt5.QtCore import QModelIndex, QRegExp
 from PyQt5.QtGui import QPixmap, QRegExpValidator
@@ -69,7 +69,7 @@ class FormFacturero(QDialog):
             return True
 
         if self.ui.txt_nombre.hasAcceptableInput():
-            if sqlite_unique_value('factureros', 'razon_social', 
+            if sqlite_is_unique('factureros', 'razon_social', 
             search_value):
                 return True
             else:
